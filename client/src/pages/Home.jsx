@@ -1,6 +1,6 @@
-import AuthForm from "../components/AuthForm/AuthForm";
+import React from "react";
 
-const Home = ({ auth, authAction, logout, businesses, users, reviews }) => {
+const Home = ({ auth, businesses, users, reviews }) => {
   return (
     <div>
       <h1>Home</h1>
@@ -12,14 +12,9 @@ const Home = ({ auth, authAction, logout, businesses, users, reviews }) => {
         <br />
         Display some interesting information about our {reviews.length} Reviews
       </p>
-      {!auth.id ? (
-        <>
-          <AuthForm authAction={authAction} mode="login" />
-          <AuthForm authAction={authAction} mode="register" />
-        </>
-      ) : null}
     </div>
   );
 };
 
 export default Home;
+

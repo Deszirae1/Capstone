@@ -3,7 +3,9 @@ import { Link, Route, Routes } from "react-router-dom";
 import Users from "./pages/Users";
 import Businesses from "./pages/Businesses";
 import CreateReview from "./pages/CreateReview";
-import Home from "./pages/Home";
+import Home from "./pages/Home"; 
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   const [auth, setAuth] = useState({});
@@ -57,7 +59,7 @@ function App() {
 
   return (
     <>
-      <h1>Acme Business Reviews</h1>
+      <h1>The Beauty Shop Business Reviews</h1>
       <nav>
         <Link to="/">Home</Link>
         <Link to="/businesses">Businesses ({businesses.length})</Link>
