@@ -1,8 +1,7 @@
 import CardHeader from '@mui/material/CardHeader';
-import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-mport CardMedia from '@mui/material/CardMedia';
+import CardMedia from '@mui/material/CardMedia';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import CardContent from '@mui/material/CardContent';
