@@ -6,12 +6,17 @@ import CreateReview from "./pages/CreateReview";
 import Home from "./pages/Home"; 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Footer from './pages/Footer';
+ 
+
+
 
 function App() {
   const [auth, setAuth] = useState({});
   const [users, setUsers] = useState([]);
   const [businesses, setBusinesses] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [Footer, setFooter] = useState([]);
 
   useEffect(() => {
     attemptLoginWithToken();
@@ -59,7 +64,7 @@ function App() {
 
   return (
     <>
-      <h1>The Beauty Shop Business Reviews</h1>
+      <h1>Business Reviews</h1>
       <nav>
         <Link to="/">Home</Link>
         <Link to="/businesses">Businesses ({businesses.length})</Link>
@@ -67,7 +72,7 @@ function App() {
         {auth.id ? (
           <Link to="/createReview">Create Review</Link>
         ) : (
-          <Link to="/">Register/Login</Link>
+          <Link to="/Login">Login</Link>
         )}
       </nav>
       {auth.id && <button onClick={logout}>Logout {auth.username}</button>}

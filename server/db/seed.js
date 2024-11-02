@@ -1,5 +1,5 @@
 const { create } = require("domain");
-cconst { client } = require("./client");
+const { client } = require("./client");
 
 
 const createTables = async () => {

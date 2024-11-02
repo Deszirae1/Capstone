@@ -3,7 +3,7 @@ import React from "react";
 const Home = ({ auth, businesses, users, reviews }) => {
   return (
     <div>
-      <h1>Home</h1>
+      <h1>The Beauty Shop</h1>
       <p>
         Display some interesting information about our {businesses.length}{" "}
         Businesses
