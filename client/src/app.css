@@ -1,0 +1,14 @@
+
+nav a {
+    text-decoration: none;
+    color: black;
+    margin-right: 15px; 
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  
+  
+  nav a:hover {
+    color: #ff47cb; 
+  }
+  

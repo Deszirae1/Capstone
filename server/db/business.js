@@ -1,5 +1,7 @@
 const client = require("/client");
 
+const uuid = require("uuid");
+
 // CREATE a new business
 const createBusiness = async ({ name, image, description }) => {
   try {

@@ -3,25 +3,26 @@ import { Link, Route, Routes } from "react-router-dom";
 import Users from "./pages/Users";
 import Businesses from "./pages/Businesses";
 import CreateReview from "./pages/CreateReview";
-import Home from "./pages/Home"; 
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Footer from './pages/Footer';
- 
-
-
+import Header from "./pages/Header";
+import Footer from "./pages/Footer1";
+import "./app.css";
 
 function App() {
   const [auth, setAuth] = useState({});
   const [users, setUsers] = useState([]);
   const [businesses, setBusinesses] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [Footer, setFooter] = useState([]);
 
+  // Fetch data when the component mounts
   useEffect(() => {
     attemptLoginWithToken();
+    fetchData();
   }, []);
 
+  // Function to attempt login with a saved token
   const attemptLoginWithToken = async () => {
     const token = window.localStorage.getItem("token");
     if (token) {
@@ -39,6 +40,20 @@ function App() {
     }
   };
 
+  // Fetch data for businesses, users, and reviews
+  const fetchData = async () => {
+    const [usersRes, businessesRes, reviewsRes] = await Promise.all([
+      fetch("/api/users").then((res) => res.json()),
+      fetch("/api/businesses").then((res) => res.json()),
+      fetch("/api/reviews").then((res) => res.json()),
+    ]);
+
+    if (usersRes) setUsers(usersRes);
+    if (businessesRes) setBusinesses(businessesRes);
+    if (reviewsRes) setReviews(reviewsRes);
+  };
+
+  // Authentication action: login or register
   const authAction = async (credentials, mode) => {
     const response = await fetch(`/api/auth/${mode}`, {
       method: "POST",
@@ -57,6 +72,7 @@ function App() {
     }
   };
 
+  // Logout action
   const logout = () => {
     window.localStorage.removeItem("token");
     setAuth({});
@@ -64,7 +80,8 @@ function App() {
 
   return (
     <>
-      <h1>Business Reviews</h1>
+      <Header />
+
       <nav>
         <Link to="/">Home</Link>
         <Link to="/businesses">Businesses ({businesses.length})</Link>
@@ -72,10 +89,22 @@ function App() {
         {auth.id ? (
           <Link to="/createReview">Create Review</Link>
         ) : (
-          <Link to="/Login">Login</Link>
+          <>
+          <Link to="/login">Login</Link>
+        </>
         )}
       </nav>
-      {auth.id && <button onClick={logout}>Logout {auth.username}</button>}
+
+      {auth.id ? (
+        <button onClick={logout}>
+          Logout {auth.username || "User"} {/* Fallback for username */}
+        </button>
+      ) : (
+        <>
+          
+        </>
+      )}
+
       <Routes>
         <Route
           path="/"
@@ -89,13 +118,14 @@ function App() {
             />
           }
         />
-        <Route
-          path="/businesses"
-          element={<Businesses businesses={businesses} />}
-        />
+        <Route path="/businesses" element={<Businesses businesses={businesses} />} />
         <Route path="/users" element={<Users users={users} />} />
-        {!!auth.id && <Route path="/createReview" element={<CreateReview />} />}
+        <Route path="/login" element={<Login authAction={authAction} />} />
+        <Route path="/register" element={<Register authAction={authAction} />} />
+        {auth.id && <Route path="/createReview" element={<CreateReview />} />}
       </Routes>
+
+      <Footer />
     </>
   );
 }

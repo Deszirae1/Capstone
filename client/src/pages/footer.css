@@ -1,12 +1,9 @@
-
 .footer {
-    background-color: blue;
-    padding: 20px;
-    text-align: center;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-  }
+  background-color: rgb(217, 255, 0); 
+  padding: 3px; 
+  text-align: center; 
+  width: 100%; 
+}
   
   .footer nav ul {
     list-style: none;
@@ -22,4 +19,6 @@
     text-decoration: none;
     color: #333;
   }
+
+
   

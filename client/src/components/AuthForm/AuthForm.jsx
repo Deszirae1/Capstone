@@ -1,27 +1,51 @@
-import { useState, useEffect } from 'react'
-
-const AuthForm = ({ authAction, mode='login' })=> {
+import React, { useState } from 'react';
+import './authForm.css';  
+const AuthForm = ({ authAction, mode, buttonClassName }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
-  const submit = async(ev) => {
-    ev.preventDefault();
-    try {
-      await authAction({ username, password }, mode);
-    }
-    catch(ex){
-      setError(ex.error);
-    }
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    authAction({ username, password, mode });
+  };
+
   return (
-    <form onSubmit={ submit }>
-      { !!error && <div className='error'>{ error }</div> }
-      <input value={ username } placeholder='username' onChange={ ev=> setUsername(ev.target.value)}/>
-      <input value={ password} placeholder='password' onChange={ ev=> setPassword(ev.target.value)}/>
-      <button>{ mode }</button>
+    <form onSubmit={handleSubmit} className="auth-form">
+      <h2>{mode === 'login' ? 'Login' : 'Register'}</h2>
+
+      <div className="input-group">
+        <label>
+          Username:
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            className="input-field"
+          />
+        </label>
+      </div>
+      
+      <div className="input-group">
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="input-field"
+          />
+        </label>
+      </div>
+
+      <button type="submit" className={buttonClassName}>
+        {mode === 'login' ? 'Login' : 'Register'}
+      </button>
     </form>
   );
-}
+};
 
 export default AuthForm;
+
+

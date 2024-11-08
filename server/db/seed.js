@@ -1,26 +1,50 @@
-const { create } = require("domain");
 const { client } = require("./client");
 
+const { createUser, fetchUsers } = require("./index.js");
 
 const createTables = async () => {
-  try { 
-    
-    console.log('creating tables...'); 
-  } catch(err)  { 
-    console.log ('error creating tables', err);
-  }
-}
+  const SQL = `
+    DROP TABLE IF EXISTS users CASCADE;
+    DROP TABLE IF EXISTS businesses CASCADE;
+    DROP TABLE IF EXISTS reviews CASCADE;
+    CREATE TABLE users(
+      id UUID PRIMARY KEY,
+      username VARCHAR(20) UNIQUE NOT NULL,
+      password VARCHAR(255) NOT NULL
+    );
+    CREATE TABLE businesses(
+      id UUID PRIMARY KEY,
+      businessname VARCHAR(64) UNIQUE NOT NULL
+    );
+    CREATE TABLE reviews(
+      id UUID PRIMARY KEY,
+      businessrating INT NOT NULL,
+      reviewcomments VARCHAR(1024) NOT NULL,
+      userId UUID REFERENCES users(id) NOT NULL,
+      businessId UUID REFERENCES businesses(id) NOT NULL
+    );
+  `;
+  await client.query(SQL);
+};
 
-
-const synceAndSeed = async () => { 
+const init = async () => {
   await client.connect();
-  console.log('connected to the database'); 
+  console.log("connected to database");
 
-  await client.end();
-  console.log('disconnected from the database');  
+  await createTables();
+  console.log("tables created");
 
-}
+  const [moe, lucy, ethyl, curly] = await Promise.all([
+    createUser({ username: "moe", password: "m_pw" }),
+    createUser({ username: "lucy", password: "l_pw" }),
+    createUser({ username: "ethyl", password: "e_pw" }),
+    createUser({ username: "curly", password: "c_pw" }),
+  ]);
 
-  synceAndSeed(); 
+  console.log(await fetchUsers());
+  client.end();
+};
+
+init();
 
   
