@@ -1,65 +1,67 @@
 const express = require("express");
 const router = express.Router();
 
-const {
-  fetchBusiness,
-  fetchSingleBusiness,
-  fetchBusinessReview,
-} = require("../db");
+const { fetchBusinesses, createBusiness, fetchBusiness, getBusinessReviews } = require("../db");
 
-// GET all businesses
 router.get("/", async (req, res, next) => {
   try {
-    const businesses = await fetchBusiness();
-    res.send(businesses);
+    res.send(await fetchBusinesses());
   } catch (ex) {
     next(ex);
   }
 });
 
-// GET a single business by ID
 router.get("/:id", async (req, res, next) => {
-  const id = req.params.id;
+    try {
+        const id = req.params.id;
 
-  if (isNaN(id)) {
-    return res.status(400).send({ error: "Invalid business ID" });
-  }
+        if (req.params.id === " ") {
+            next({
+              name: "MissingBusinessID",
+              message: "A buisness ID must be provided",
+            });
+            return;}
 
-  try {
-    const business = await fetchSingleBusiness(id);
+        const result = await fetchBusiness(id);
+        if (!result) {
+            next({ name: "Not Found", message: "No matching business found" });
+            return;
+          }
+        res.send(result);
+        }catch (ex) {
+        next(ex);
+        }
+  });
 
-    // Check the business
-    if (!business.length) {
-      return res.status(404).send({ error: "Business not found" });
+  router.get("/:id/reviews", async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        if (req.params.id === " ") {
+            next({
+              name: "MissingBusinessID",
+              message: "A buisness ID must be provided",
+            });
+            return;}
+
+        const result = await getBusinessReviews(id);
+        if (!result) {
+            next({ name: "Not Found", message: "No matching business found" });
+            return;
+          }
+        res.send(result);
+        }catch (ex) {
+        next(ex);
+        }
+  });
+
+
+router.post("/create", async (req, res, next) => {
+    try {
+      res.send(await createBusiness(req.body));
+    } catch (ex) {
+      next(ex);
     }
-
-    res.send(business[0]);
-  } catch (ex) {
-    next(ex);
-  }
-});
-
-// GET reviews for business by ID
-router.get("/:id/reviews", async (req, res, next) => {
-  const id = Number(req.params.id);
-
-  if (isNaN(id)) {
-    return res.status(400).send({ error: "Invalid business ID" });
-  }
-
-  try {
-    const reviews = await fetchBusinessReview(id);
-
-    if (!reviews.length) {
-      return res
-        .status(404)
-        .send({ error: "No reviews found for this business" });
-    }
-
-    res.send(reviews);
-  } catch (ex) {
-    next(ex);
-  }
-});
+  });
 
 module.exports = router;

@@ -8,7 +8,7 @@ import narsLogo from '../assets/images/Main Logos/NARS Logo.png';
 const Footer = () => {
   return (
     <footer className="footer">
-      <p>&copy; {new Date().getFullYear()} The Beauty Shop. All rights reserved.</p>
+      <p style={{ textShadow: '.5px 1px 2px #ff00cc' }}>&copy; {new Date().getFullYear()} The Beauty Shop. All rights reserved.</p>
       <nav>
         <ul>
           <li>

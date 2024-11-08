@@ -16,6 +16,11 @@ const Home = ({ auth, authAction, businesses, users, reviews }) => {
 
       
       <div className="images-container">
+      <img
+          src={narsLogo} 
+          alt="NARS"
+          style={{ width: '140px', height: 'auto', marginTop: 'auto'}}
+        />
         <img
           src={cliniqueLogo}
           alt="Clinique"
@@ -30,11 +35,6 @@ const Home = ({ auth, authAction, businesses, users, reviews }) => {
           src={macLogo}
           alt="MAC"
           style={{ width: '135px', height: 'auto'}}
-        />
-        <img
-          src={narsLogo} 
-          alt="NARS"
-          style={{ width: '140px', height: 'auto', marginTop: 'auto'}}
         />
 
       </div>

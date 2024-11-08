@@ -1,28 +1,55 @@
 const express = require("express");
 const router = express.Router();
 
-const { fetchReview, createReview } = require("../db");
+const { fetchReview, createReview, editReview, deleteReview } = require("../db");
 const { isLoggedIn } = require("./utils");
 
-// All Reviews
+const { fetchReviews, createReview, editReview, deleteReview } = require("../db");
+
 router.get("/", async (req, res, next) => {
   try {
-    const reviews = await fetchReview();
-    res.send(reviews);
+    res.send(await fetchReviews());
   } catch (ex) {
     next(ex);
   }
 });
 
-router.post("/create", isLoggedIn, async (req, res, next) => {
-  console.log("req", req);
+
+router.post("/create", async (req, res, next) => {
   try {
-    const review = await createReview(req.user.id, req.body); //pass in all 4 parameters from reviews db
-    console.log("review", review);
-    res.send(review);
+    res.send(await createReview(req.body));
+  } catch (ex) {
+      next(ex); 
+  }
+});
+
+
+router.put("/:review_id", async (req, res, next) => {
+  try {
+    const { review_id } = req.params;
+    const { description, rating } = req.body;
+    
+    const updatedReview = await editReview({ review_id, description, rating });
+    res.send(updatedReview);
   } catch (ex) {
     next(ex);
   }
 });
+
+
+router.delete("/:review_id", async (req, res, next) => {
+  try {
+    const { review_id } = req.params;
+    
+    const deletedReview = await deleteReview(review_id);
+    res.send(deletedReview);
+  } catch (ex) {
+    next(ex);
+  }
+});
+
+
+
+
 
 module.exports = router;

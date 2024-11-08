@@ -6,6 +6,9 @@ import CreateReview from "./pages/CreateReview";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Account from "./pages/Account"; 
+import Admin from "./pages/Admin";
+import UserDetails from "./pages/UserDetails";
 import Header from "./pages/Header";
 import Footer from "./pages/Footer1";
 import "./app.css";
@@ -15,6 +18,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [businesses, setBusinesses] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [refreshReviews, setRefreshReviews] = useState(false);
 
   // Fetch data when the component mounts
   useEffect(() => {
@@ -106,23 +110,15 @@ function App() {
       )}
 
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Home
-              authAction={authAction}
-              auth={auth}
-              businesses={businesses}
-              users={users}
-              reviews={reviews}
-            />
-          }
-        />
+        <Route path="/" element={<Home authAction={authAction} auth={auth} businesses={businesses} users={users} reviews={reviews} /> } />
         <Route path="/businesses" element={<Businesses businesses={businesses} />} />
         <Route path="/users" element={<Users users={users} />} />
+        <Route path="/users/:id" element={<UserDetails auth={auth} users={users}  />} />
+        <Route path="/account" element={<Account auth={auth} />} />
+        <Route path="/admin" element={<Admin auth={auth} users={users} businesses={businesses}/>} />
         <Route path="/login" element={<Login authAction={authAction} />} />
         <Route path="/register" element={<Register authAction={authAction} />} />
-        {auth.id && <Route path="/createReview" element={<CreateReview />} />}
+        {auth.id && <Route path="/CreateReview" element={<CreateReview />} />}
       </Routes>
 
       <Footer />
