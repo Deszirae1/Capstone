@@ -116,20 +116,21 @@ const init = async () => {
     createReview({ 
       title: "Flawless finish", 
       description: "Dior makeup delivers a flawless, luxurious finish with great coverage and lasting power. The formulas feel lightweight yet buildable, and they stay fresh throughout the day. Perfect for a high-end, reliable option!", 
-      user_id: moe.id, 
+      user_id: lucy.id, 
       business_id: biz2.id, 
       rating: 4
     }),
     createReview({ 
       title: "Bold and Beautiful", 
       description: "MAC makeup is perfect for bold, vibrant looks. The products offer excellent pigmentation, blend effortlessly, and stay put all day. A must-have for anyone who loves high-impact, long-lasting makeup!",
+      user_id: ethyl.id,
       business_id: biz3.id, 
       rating: 4
     }),
     createReview({ 
       title: "Radiant and Refreshing", 
       description: "NARS makeup delivers a stunning, natural glow with great buildable coverage. The products blend beautifully and last all day, making it perfect for a flawless, radiant look.", 
-      user_id: lucy.id, 
+      user_id: curly.id, 
       business_id: biz4.id, 
       rating: 4
     }),
