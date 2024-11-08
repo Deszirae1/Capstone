@@ -11,7 +11,7 @@ if (JWT === "shhh") {
 const createUser = async ({ 
   username, 
   password, 
-isAdmin = false 
+  isAdmin = false 
 }) => {
   if (!username || !password) {
     const error = Error("username and password required!");
