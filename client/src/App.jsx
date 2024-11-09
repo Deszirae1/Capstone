@@ -9,7 +9,6 @@ import Register from "./pages/Register";
 import Account from "./pages/Account"; 
 import Admin from "./pages/Admin";
 import UserDetails from "./pages/UserDetails";
-import Navigations from "./pages/Navigations";
 import Header from "./pages/Header";
 import Footer from "./pages/Footer1";
 import "./app.css";

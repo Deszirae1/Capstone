@@ -5,11 +5,17 @@ import { Link } from "react-router-dom";
 import Footer from './Footer1';
 
 
-const Register = ({ auth, authAction }) => {
+const Register = ({ authAction }) => {
+  const navigate = useNavigate();
+
+  const handleAuthSuccess = () => {
+    navigate("/");
+  };
+
   return (
     <div>
       <h1>Be our friend!</h1>
-      <AuthForm authAction={authAction} mode="register" buttonClassName="smaller-btn" />
+      <AuthForm authAction={authAction} mode="register" onSuccess={handleAuthSuccess} buttonClassName="smaller-btn" />
       <div className="link-container">
         <Link to="/Login">Click here to login</Link>
       </div>
