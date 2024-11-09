@@ -1,76 +1,78 @@
 const client = require("/client");
-
 const uuid = require("uuid");
 
-// CREATE a new business
-const createBusiness = async ({ name, image, description }) => {
-  try {
-    const SQL = `
-      INSERT INTO business (name, image, description) 
-      VALUES ($1, $2, $3) 
-      RETURNING *;
-    `;
-    
-    const response = await client.query(SQL, [name, image || "", description]);
-    return response.rows[0];
-  } catch (err) {
-    console.error("Error creating business:", err);
-    throw err;
+const createBusiness = async ({ 
+  businessname_full, street_address, city, state, zip, price_range,
+}) => {
+  if (!businessname_full_full) {
+    const error = Error("Please provide full business name!");
+    error.status = 401;
+    throw error;
   }
+
+  console.log("Creating business and populating data.", {
+    businessname_full,
+    street_address,
+    city,
+    state,
+    zip,
+    price_range
+  });
+
+  const SQL = `
+    INSERT INTO businesses(id, businessname_full, street_address, city, state, zip) 
+    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
+    RETURNING *;
+  `;
+
+  const response = await client.query(SQL, [
+    uuid.v4(),
+    businessname_full,
+    street_address,
+    city,
+    state,
+    zip,
+    price_range,
+    features ? JSON.stringify(features) : null
+  ]);
+
+  return response.rows[0];
 };
 
-// FETCH all businesses
-const fetchBusiness = async () => {
-  try {
-    const SQL = `
-      SELECT * 
-      FROM business;
-    `;
-    console.log(SQL);
-    const response = await client.query(SQL);
-    return response.rows;
-  } catch (err) {
-    console.error("Error fetching businesses:", err);
-    throw err;
-  }
+
+const fetchBusinesses = async () => {
+  const SQL = `
+    SELECT 
+      b.*, 
+      COUNT(r.id) AS review_count, 
+      CASE 
+        WHEN COUNT(r.id) = 0 THEN 'N/A' 
+        ELSE ROUND(AVG(r.rating), 1)::text 
+      END AS review_avgrating
+    FROM businesses b
+    LEFT JOIN reviews r ON b.id = r.business_id
+    GROUP BY b.id;
+  `;
+  const response = await client.query(SQL);
+  return response.rows;
 };
 
-// FETCH single business by ID
-const fetchSingleBusiness = async (id) => {
-  try {
-    const SQL = `
-      SELECT * 
-      FROM business 
-      WHERE id = $1;
-    `;
-    const response = await client.query(SQL, [id]);
-    return response.rows;
-  } catch (err) {
-    console.error("Error fetching single business:", err);
-    throw err;
-  }
-};
 
-// FETCH reviews for business
-const fetchBusinessReview = async (businessid) => {
-  try {
-    const SQL = `
-      SELECT reviews.id, reviews.text, reviews.rating, reviews.userid, reviews.businessid 
-      FROM reviews 
-      JOIN business ON reviews.businessid = business.id 
-      WHERE business.id = $1;
-    `;
-    const response = await client.query(SQL, [businessid]);
-    return response.rows;
-  } catch (err) {
-    console.error("Error fetching business reviews:", err);
-    throw err;
-  }
-};
+const fetchBusiness = async (id) => {
+  const SQL = `
+    SELECT 
+      b.*, 
+      COUNT(r.id) AS review_count, 
+      AVG(r.rating) AS review_avgrating
+    FROM businesses b
+    LEFT JOIN reviews r ON b.id = r.business_id
+    WHERE b.id = $1  -- 'b.id' for businesses table
+    GROUP BY b.id;
+  `;
+    const { rows: [business] }  = await client.query(SQL, [id]);
+    console.log("Fetched Business:", business);
+    return business;
+  };
 
-module.exports = {
-  createBusiness,
-  fetchBusiness,
-  fetchSingleBusiness,
-  fetchBusinessReview,
-};
+
+module.exports = { createBusiness, fetchBusinesses, fetchBusiness };

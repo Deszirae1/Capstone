@@ -1,76 +1,122 @@
-const client = require("/client");
+const { client } = require("./client");
+const uuid = require("uuid");
 
-const createReview = async ({ userid, businessid, text, rating }) => {
-  try {
-    const SQL = `
-      INSERT INTO reviews (userid, businessid, text, rating) 
-      VALUES ($1, $2, $3, $4) 
-      RETURNING *;
-    `;
-    const response = await client.query(SQL, [
-      userid,
-      businessid,
-      text,
-      rating,
-    ]);
-    return response.rows[0];
-  } catch (err) {
-    console.error("Error creating review:", err);
-    throw err;
+const createReview = async ({ title, description, user_id, business_id, rating }) => {
+  if (!title || !rating || !description || !business_id || !user_id) {
+    const error = Error(" All fields required!");
+    error.status = 401;
+    throw error;
   }
+  const checkForReview = `
+  SELECT * FROM reviews WHERE user_id = $1 AND business_id = $2`;
+  const checkResponse = await client.query(checkForReview, [user_id, business_id]);
+
+  if (checkResponse.rows.length > 0) {
+    const error = Error("Only one reivew per user per business allowed!");
+    error.status = 400;
+    throw error;
+  }
+  const SQL = `
+    INSERT INTO reviews(id, title, description, user_id, business_id, rating) VALUES($1, $2, $3, $4, $5, $6) RETURNING *
+  `;
+  const response = await client.query(SQL, [uuid.v4(), title, description, user_id, business_id, rating]);
+  return response.rows[0];
 };
 
-const fetchReview = async () => {
+const fetchReviews = async () => {
+  const SQL = `
+    SELECT reviews.id, reviews.title, reviews.description, reviews.user_id, reviews.business_id, reviews.rating, users.username
+    FROM reviews
+    JOIN users ON reviews.user_id = users.id;
+  `;
+  const response = await client.query(SQL);
+  return response.rows;
+};
+
+const getUsersReviews = async (user_id) => {
   try {
     const SQL = `
-      SELECT reviews.id, reviews.userid, reviews.businessid, reviews.text, reviews.rating, users.username, business.name AS business_name
+      SELECT 
+        reviews.id AS review_id,
+        reviews.title,
+        reviews.description,
+        reviews.rating,
+        users.username,
+        businesses.name_full AS business_name
       FROM reviews
-      JOIN users ON reviews.userid = users.id
-      JOIN business ON reviews.businessid = business.id;
+      JOIN users ON reviews.user_id = users.id
+      JOIN businesses ON reviews.business_id = businesses.id
+      WHERE users.id = $1;
     `;
-    const response = await client.query(SQL);
-    return response.rows; // Return All Reviews with Usernames / Businesses
-  } catch (err) {
-    console.error("Error fetching reviews:", err);
+    const { rows } = await client.query(SQL, [user_id]);
+    return rows;
+  } catch (err) { 
     throw err;
   }
 };
 
-const fetchBusinessReview = async (businessid) => {
+const getBusinessReviews = async (business_id) => {
   try {
     const SQL = `
-      SELECT reviews.id, reviews.text, reviews.rating, users.username 
-      FROM reviews 
-      JOIN users ON reviews.userid = users.id
-      WHERE reviews.businessid = $1;
-    `;
-    const response = await client.query(SQL, [businessid]);
-    return response.rows; // Return Reviews for Business
-  } catch (err) {
-    console.error("Error fetching business reviews:", err);
-    throw err;
-  }
-};
-
-const fetchUserReviews = async (userid) => {
-  try {
-    const SQL = `
-      SELECT reviews.id, reviews.text, reviews.rating, business.name AS business_name 
+      SELECT reviews.id, reviews.title, reviews.description, reviews.rating, reviews.user_id, users.username
       FROM reviews
-      JOIN business ON reviews.businessid = business.id
-      WHERE reviews.userid = $1;
+      JOIN users ON reviews.user_id = users.id
+      WHERE reviews.business_id = $1;
     `;
-    const response = await client.query(SQL, [userid]);
-    return response.rows; // Return Reviews by User w/ Business
+    const { rows } = await client.query(SQL, [business_id]);
+    return rows;
   } catch (err) {
-    console.error("Error fetching user reviews:", err);
     throw err;
   }
 };
 
-module.exports = {
-  createReview,
-  fetchReview,
-  fetchBusinessReview,
-  fetchUserReviews,
+
+const editReview = async ({ review_id, description, rating }) => {
+  if (!review_id || !description || !rating) {
+    const error = Error("All fields required!");
+    error.status = 401;
+    throw error;
+  }
+
+  const SQL = `
+    UPDATE reviews
+    SET description = $1, rating = $2
+    WHERE id = $3
+    RETURNING *;
+  `;
+  const { rows } = await client.query(SQL, [description, rating, review_id]);
+  
+  if (rows.length === 0) {
+    const error = Error("No review found.");
+    error.status = 404;
+    throw error;
+  }
+  
+  return rows[0];  
 };
+
+const deleteReview = async (review_id) => {
+  if (!review_id) {
+    const error = Error("Must input ID!");
+    error.status = 401;
+    throw error;
+  }
+
+  const SQL = `
+    DELETE FROM reviews
+    WHERE id = $1
+    RETURNING *;
+  `;
+  const { rows } = await client.query(SQL, [review_id]);
+  
+  if (rows.length === 0) {
+    const error = Error("No review found");
+    error.status = 404;
+    throw error;
+  }
+  
+  return rows[0];  
+};
+
+
+module.exports = { createReview, fetchReviews, getUsersReviews, getBusinessReviews, editReview, deleteReview };
