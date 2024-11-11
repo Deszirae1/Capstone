@@ -1,7 +1,7 @@
 /* Styling for register/login buttons */
 
 button.smaller-btn {
-    font-size: 12px; 
+    font-size: 14px; 
     padding: 6px 12px; 
     width: auto; 
     border-radius: 4px; 
@@ -68,5 +68,5 @@ button.smaller-btn {
   
 
  
-  
+  /* move these into respective folders later */
   

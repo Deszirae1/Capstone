@@ -1,37 +1,43 @@
-const { client } = require("/client");
-
+const { client } = require("./client"); 
+require('dotenv').config();  
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
+
 const JWT = process.env.JWT || "shhh";
-if (JWT === "shhh") {
-  console.log("If deployed, set process.env.JWT to something other than shhh");
+
+
+if (JWT === "shhh" && process.env.NODE_ENV !== "production") {
+  console.log("Warning: In production, ensure process.env.JWT is set to a secure value!");
 }
 
-const createUser = async ({ 
-  username, 
-  password, 
-  isAdmin = false 
-}) => {
+
+const errorHandler = (message, statusCode) => {
+  const error = new Error(message);
+  error.status = statusCode;
+  throw error;
+};
+
+const createUser = async ({ username, password, isAdmin = false }) => {
   if (!username || !password) {
-    const error = Error("username and password required!");
-    error.status = 401;
-    throw error;
+    errorHandler("Username and password are required!", 401);
   }
 
   const SQL = `
-    INSERT INTO users(id, username, password, isAdmin) VALUES($1, $2, $3) RETURNING *
+    INSERT INTO users(id, username, password, isAdmin) 
+    VALUES($1, $2, $3, $4) 
+    RETURNING *
   `;
-
-  const response = await client.query(SQL, [
-    uuid.v4(),
-    username,
-    await bcrypt.hash(password, 5),
-    isAdmin
-  ]);
   
-  return response.rows[0];
+  const hashedPassword = await bcrypt.hash(password, 5); 
+  const userId = uuid.v4();
+
+  const response = await client.query(SQL, [userId, username, hashedPassword, isAdmin]);
+  
+  return { success: true, user: response.rows[0] };
 };
+
 
 const findUserWithToken = async (token) => {
   let id;
@@ -39,56 +45,56 @@ const findUserWithToken = async (token) => {
     const payload = await jwt.verify(token, JWT);
     id = payload.id;
   } catch (ex) {
-    const error = Error("not authorized");
-    error.status = 401;
-    throw error;
+    errorHandler("Not authorized", 401);
   }
+
   const SQL = `
     SELECT * FROM users WHERE id=$1;
-`;
+  `;
+  
   const response = await client.query(SQL, [id]);
+  
   if (!response.rows.length) {
-    const error = Error("not authorized");
-    error.status = 401;
-    throw error;
+    errorHandler("Not authorized", 401);
   }
+  
   return response.rows[0];
 };
 
-const fetchUsers = async () => {
-  const SQL = `
-    SELECT * FROM users WHERE id=$1;
-`;
-  const response = await client.query(SQL);
+
+const fetchUsers = async (userId) => {
+  const SQL = `SELECT * FROM users WHERE id=$1;`;
+  const response = await client.query(SQL, [userId]);
   return response.rows;
 };
 
+
 const getUsersWithReviewSummary = async () => {
   const SQL = `
-    SELECT u.id, u.username, u.isAdmin, count
+    SELECT u.id, u.username, u.isAdmin, COUNT(r.id) AS review_count
     FROM users u
     LEFT JOIN reviews r ON u.id = r.user_id
     GROUP BY u.id;
   `;
+  
   const response = await client.query(SQL);
   return response.rows;
 };
 
+
 const authenticate = async ({ username, password }) => {
   const SQL = `
-    SELECT * FROM users WHERE id=$1;
-`;
+    SELECT * FROM users WHERE username=$1;
+  `;
+  
   const response = await client.query(SQL, [username]);
-  if (
-    !response.rows.length ||
-    (await bcrypt.compare(password, response.rows[0].password)) === false
-  ) {
-    const error = Error("not authorized");
-    error.status = 401;
-    throw error;
+  
+  if (!response.rows.length || !(await bcrypt.compare(password, response.rows[0].password))) {
+    errorHandler("Invalid username or password", 401);
   }
-  const token = await jwt.sign({ id: response.rows[0].id }, JWT);
-  return { token };
+
+  const token = jwt.sign({ id: response.rows[0].id }, JWT, { expiresIn: '1h' });
+  return { success: true, token };
 };
 
 const deleteUser = async (userId) => {
@@ -107,12 +113,17 @@ const deleteUser = async (userId) => {
   const response = await client.query(deleteFromUsers, [userId]);
   
   if (response.rowCount === 0) {
-    const error = Error("User not found");
-    error.status = 404;
-    throw error;
+    errorHandler("User not found", 404);
   }
-  
-  return response.rows[0]; 
+
+  return { success: true, user: response.rows[0] };
 };
 
-module.exports = { createUser, findUserWithToken, fetchUsers, getUsersWithReviewSummary, authenticate, deleteUser };
+module.exports = {
+  createUser,
+  findUserWithToken,
+  fetchUsers,
+  getUsersWithReviewSummary,
+  authenticate,
+  deleteUser
+};

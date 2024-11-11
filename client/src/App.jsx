@@ -20,13 +20,13 @@ function App() {
   const [reviews, setReviews] = useState([]);
   const [refreshReviews, setRefreshReviews] = useState(false);
 
-  // Fetch data when the component mounts
+  
   useEffect(() => {
     attemptLoginWithToken();
     fetchData();
   }, []);
 
-  // Function to attempt login with a saved token
+  
   const attemptLoginWithToken = async () => {
     const token = window.localStorage.getItem("token");
     if (token) {
@@ -44,39 +44,55 @@ function App() {
     }
   };
 
-  // Fetch data for businesses, users, and reviews
+ 
   const fetchData = async () => {
-    const [usersRes, businessesRes, reviewsRes] = await Promise.all([
-      fetch("/api/users").then((res) => res.json()),
-      fetch("/api/businesses").then((res) => res.json()),
-      fetch("/api/reviews").then((res) => res.json()),
-    ]);
+    try {
+      const [usersRes, businessesRes, reviewsRes] = await Promise.all([
+        fetch("/api/users"),
+        fetch("/api/businesses"),
+        fetch("/api/reviews")
+      ]);
 
-    if (usersRes) setUsers(usersRes);
-    if (businessesRes) setBusinesses(businessesRes);
-    if (reviewsRes) setReviews(reviewsRes);
-  };
-
-  // Authentication action: login or register
-  const authAction = async (credentials, mode) => {
-    const response = await fetch(`/api/auth/${mode}`, {
-      method: "POST",
-      body: JSON.stringify(credentials),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const json = await response.json();
-    if (response.ok) {
-      window.localStorage.setItem("token", json.token);
-      attemptLoginWithToken();
-    } else {
-      throw json;
+     
+      if (usersRes.ok) {
+        setUsers(await usersRes.json());
+      }
+      if (businessesRes.ok) {
+        setBusinesses(await businessesRes.json());
+      }
+      if (reviewsRes.ok) {
+        setReviews(await reviewsRes.json());
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   };
 
-  // Logout action
+  
+  const authAction = async (credentials, mode) => {
+    try {
+      const response = await fetch(`/api/auth/${mode}`, {
+        method: "POST",
+        body: JSON.stringify(credentials),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const json = await response.json();
+      if (response.ok) {
+        window.localStorage.setItem("token", json.token);
+        attemptLoginWithToken();
+      } else {
+        throw new Error(json.message || "Authentication failed");
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+      throw error; 
+    }
+  };
+
+ 
   const logout = () => {
     window.localStorage.removeItem("token");
     setAuth({});
@@ -91,34 +107,27 @@ function App() {
         <Link to="/businesses">Businesses ({businesses.length})</Link>
         <Link to="/users">Users ({users.length})</Link>
         {auth.id ? (
-          <Link to="/createReview">Create Review</Link>
+          <>
+            <Link to="/createReview">Create Review</Link>
+            <button onClick={logout}>Logout {auth.username || "User"}</button>
+          </>
         ) : (
           <>
-          <Link to="/login">Login</Link>
-        </>
+            <Link to="/login">Login</Link>
+          </>
         )}
       </nav>
 
-      {auth.id ? (
-        <button onClick={logout}>
-          Logout {auth.username || "User"} {/* Fallback for username */}
-        </button>
-      ) : (
-        <>
-          
-        </>
-      )}
-
       <Routes>
-        <Route path="/" element={<Home authAction={authAction} auth={auth} businesses={businesses} users={users} reviews={reviews} /> } />
+        <Route path="/" element={<Home authAction={authAction} auth={auth} businesses={businesses} users={users} reviews={reviews} />} />
         <Route path="/businesses" element={<Businesses businesses={businesses} />} />
         <Route path="/users" element={<Users users={users} />} />
-        <Route path="/users/:id" element={<UserDetails auth={auth} users={users}  />} />
+        <Route path="/users/:id" element={<UserDetails auth={auth} users={users} />} />
         <Route path="/account" element={<Account auth={auth} />} />
-        <Route path="/admin" element={<Admin auth={auth} users={users} businesses={businesses}/>} />
+        <Route path="/admin" element={<Admin auth={auth} users={users} businesses={businesses} />} />
         <Route path="/login" element={<Login authAction={authAction} />} />
         <Route path="/register" element={<Register authAction={authAction} />} />
-        {auth.id && <Route path="/CreateReview" element={<CreateReview />} />}
+        {auth.id && <Route path="/createReview" element={<CreateReview />} />}
       </Routes>
 
       <Footer />
@@ -127,3 +136,4 @@ function App() {
 }
 
 export default App;
+

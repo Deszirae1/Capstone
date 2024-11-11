@@ -1,6 +1,6 @@
-import BusinessForm from "../components/BusinessForm";
-import UserCard from "../components/UserCard";
-import BusinessesContainer from "../components/BusinessesContainer";
+import BusinessForm from "./BusinessForm";
+import UserCard from "./UserCard";
+import BusinessesContainer from "./BusinessesContainer";
 
 const Admin = ({ auth: { username }, users, businesses }) => {
   return (

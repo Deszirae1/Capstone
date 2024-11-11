@@ -4,11 +4,12 @@ const router = express.Router();
 const { fetchReview, createReview, editReview, deleteReview } = require("../db");
 const { isLoggedIn } = require("./utils");
 
-const { fetchReviews, createReview, editReview, deleteReview } = require("../db");
 
-router.get("/", async (req, res, next) => {
+router.get("/:id/reviews", async (req, res, next) => {
   try {
-    res.send(await fetchReviews());
+    const id = req.params.id;
+    const result = await getUsersReviews(id);
+    res.send(result);
   } catch (ex) {
     next(ex);
   }

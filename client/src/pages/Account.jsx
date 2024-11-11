@@ -1,5 +1,5 @@
-import UserReviews from "../components/UserReviews";
-import UserDetail from "../components/UserDetail";
+import UserReviews from "./UserReviews";
+import UserDetail from "./UserDetail";
 
 const Account = ({ auth }) => {
   if (!auth) {

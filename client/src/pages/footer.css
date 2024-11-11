@@ -1,18 +1,18 @@
 .footer {
   background-color: rgb(217, 255, 0); 
-  padding: 3px; 
+  padding: 2px; 
   text-align: center; 
   width: 100%; 
 }
   
   .footer nav ul {
     list-style: none;
-    padding: 0;
+    padding: auto;
   }
   
   .footer nav ul li {
     display: inline;
-    margin: 0 15px;
+    margin: 0 100px;
   }
   
   .footer nav ul li a {

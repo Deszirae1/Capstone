@@ -1,13 +1,19 @@
 import React from 'react';
-import Footer from './Footer1'; 
+import './Users.css';
+import Footer from './Footer1';
+import UsersContainer from "./UsersContainer"; 
+import { Container } from '@mui/material'; 
+
 
 const Users = ({ users }) => {
   return (
-    <div>
-      <h1>Placeholder for Users: {users.length}</h1>
-    </div>
+    <Container className="users-container">
+      <h1 className="users-title">Users ({users.length})</h1>
+      <UsersContainer users={users} /> 
+    </Container> 
   );
 };
 
 export default Users;
 
+//possibly done. 

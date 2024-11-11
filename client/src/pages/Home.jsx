@@ -8,6 +8,7 @@ import diorLogo from "../assets/images/Main Logos/Dior Logo.png";
 import macLogo from "../assets/images/Main Logos/MAC Logo.png"; 
 import narsLogo from "../assets/images/Main Logos/NARS Logo.png"; 
 
+
 const Home = ({ auth, authAction, businesses, users, reviews }) => {
   return (
     <div>

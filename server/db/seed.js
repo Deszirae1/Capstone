@@ -62,17 +62,17 @@ const init = async () => {
   const [biz1, biz2, biz3, biz4] = await Promise.all([
     createBusiness({ 
       businessname_full: "Clinique", 
-      location_address: "5019 Venetian Way", 
-      city: "Versailles", 
-      state: "Kentucky", 
-      zip: "40383", 
+      location_address: "5767 Fifth Avenue", 
+      city: "New York", 
+      state: "New York", 
+      zip: "10153", 
       price_range: "$$$",
     
     }),
 
     createBusiness({ 
       businessname_full: "Dior", 
-      location_address: "767 Fifth Avenue", 
+      location_address: "30 Avenue Montaigne", 
       city: "New York", 
       state: "New York", 
       zip: "10153", 

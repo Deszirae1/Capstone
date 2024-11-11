@@ -7,9 +7,10 @@
 // import CardContent from '@mui/material/CardContent'; (not used, Javier showed us this. May use later.)
 
 import { useState } from "react";
-import BusinessesContainer from "../components/BusinessesContainer";
-import BusinessForm from "../components/BusinessForm";
+import { Button } from '@mui/material';
+import BusinessForm from "./BusinessForm";
 import Footer from './Footer1'; 
+import BusinessesContainer from "./BusinessesContainer";
 
 const Businesses = ({ auth, businesses, businessFormAction }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -18,21 +19,38 @@ const Businesses = ({ auth, businesses, businessFormAction }) => {
   const handleHideForm = () => setIsFormVisible(false);
 
   return (
-    <Container>
+    <div>
       <div>Businesses ({businesses.length})</div>
       <div>Share facts and reviews about our {businesses.length} businesses.</div>
 
       <BusinessesContainer businesses={businesses} auth={auth} />
 
-      {/* Show/hide form */}
-      <Button 
-        variant="contained" 
-        color="primary" 
-        onClick={handleShowForm}
-      >
-        Add New Business
-      </Button>
+      {/* Show the "Add New Business for Review" button only when the form is not visible */}
+      {!isFormVisible && (
+        <div // button placement and styling
+          style={{
+            display: 'flex',
+            justifyContent: 'center',  
+            marginTop: '20px',         
+          }}
+        >
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: 'black',
+              color: '#FFFFFF',
+              '&:hover': {
+                backgroundColor: '#ff00cc', 
+              },
+            }}
+            onClick={handleShowForm}
+          >
+            Add New Business for Review
+          </Button>
+        </div>
+      )}
 
+      {/* Show the BusinessForm if it's visible */}
       {isFormVisible && (
         <BusinessForm 
           authId={auth?.id} 
@@ -40,10 +58,9 @@ const Businesses = ({ auth, businesses, businessFormAction }) => {
           onClose={handleHideForm} 
         />
       )}
-    </Container>
+    </div>
   );
 };
 
 export default Businesses;
-
 

@@ -8,7 +8,13 @@
     "dev:c9": "vite --port 8081",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node index.js",
+    "start:dev": "nodemon server",
+    "seed": "node ./server/db/seed.js",
+    "seed:dev": "node ./server/db/seed.js --dev"
+  }
+  
   },
   "dependencies": {
     "dotenv": "^16.4.5",
@@ -26,5 +32,5 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "vite": "^5.1.0"
   },
-  "proxy": "http://localhost:5432"
+  "proxy": "http://localhost:3000"
 }
