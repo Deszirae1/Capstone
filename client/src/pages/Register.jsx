@@ -10,24 +10,24 @@ const Register = ({ authAction }) => {
   const [error, setError] = useState(null);
 
   const handleAuthSuccess = () => {
-    navigate("/");
+    navigate("/");  // Redirect to the home page after successful registration
   };
 
   const handleAuthError = (errorMessage) => {
-    setError(errorMessage);
+    setError(errorMessage);  // Show error message on registration failure
   };
 
   return (
     <div>
       <h1>Be our friend!</h1>
       <AuthForm 
-        authAction={authAction} 
+        authAction={authAction}  // Pass the authAction function as prop
         mode="register" 
         onSuccess={handleAuthSuccess} 
-        onError={handleAuthError}
+        onError={handleAuthError} 
         buttonClassName="smaller-btn" 
       />
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="error-message">{error}</div>} {/* Show error message if any */}
       <div className="link-container">
         <Link to="/login">Click here to login</Link>
       </div>
@@ -37,10 +37,11 @@ const Register = ({ authAction }) => {
 };
 
 Register.propTypes = {
-  authAction: PropTypes.func.isRequired, 
+  authAction: PropTypes.func.isRequired, // Ensure authAction is passed and is a function
 };
 
 export default Register;
+
 
 
 

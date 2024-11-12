@@ -1,19 +1,16 @@
 const express = require("express");
 const router = express.Router();
 
-const { fetchReview, createReview, editReview, deleteReview } = require("../db");
-const { isLoggedIn } = require("./utils");
+const { fetchReviews, createReview, editReview, deleteReview } = require("../db");
 
-
-router.get("/:id/reviews", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const result = await getUsersReviews(id);
-    res.send(result);
+    res.send(await fetchReviews());
   } catch (ex) {
     next(ex);
   }
 });
+
 
 
 router.post("/create", async (req, res, next) => {
@@ -36,7 +33,6 @@ router.put("/:review_id", async (req, res, next) => {
     next(ex);
   }
 });
-
 
 router.delete("/:review_id", async (req, res, next) => {
   try {

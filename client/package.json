@@ -13,7 +13,6 @@
     "start:dev": "nodemon server",
     "seed": "node ./server/db/seed.js",
     "seed:dev": "node ./server/db/seed.js --dev"
-  }
   
   },
   "dependencies": {
@@ -33,4 +32,7 @@
     "vite": "^5.1.0"
   },
   "proxy": "http://localhost:3000"
+
 }
+
+

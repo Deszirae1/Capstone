@@ -1,10 +1,10 @@
-const client = require("./client");
+const { client } = require("./client");
 const uuid = require("uuid");
 
 const createBusiness = async ({ 
   businessname_full, street_address, city, state, zip, price_range,
 }) => {
-  if (!businessname_full_full) {
+  if (!businessname_full) {
     const error = Error("Please provide full business name!");
     error.status = 401;
     throw error;

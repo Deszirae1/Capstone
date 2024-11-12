@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, Route, Routes } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import AuthForm from './components/AuthForm/AuthForm';
 import Users from "./pages/Users";
 import Businesses from "./pages/Businesses";
 import CreateReview from "./pages/CreateReview";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Account from "./pages/Account"; 
+import Register from "./pages/Register"; 
+import Account from "./pages/Account";
 import Admin from "./pages/Admin";
 import UserDetails from "./pages/UserDetails";
 import Header from "./pages/Header";
@@ -20,40 +22,47 @@ function App() {
   const [reviews, setReviews] = useState([]);
   const [refreshReviews, setRefreshReviews] = useState(false);
 
-  
+  const navigate = useNavigate();  
+
   useEffect(() => {
     attemptLoginWithToken();
     fetchData();
   }, []);
 
-  
   const attemptLoginWithToken = async () => {
     const token = window.localStorage.getItem("token");
+  
     if (token) {
-      const response = await fetch(`/api/auth/me`, {
-        headers: {
-          authorization: token,
-        },
-      });
-      const json = await response.json();
-      if (response.ok) {
-        setAuth(json);
-      } else {
+      try {
+        const response = await fetch("http://localhost:3000/api/auth/me", {
+          method: "GET", 
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (response.ok) {
+          const json = await response.json();
+          setAuth(json);
+        } else {
+          console.error("Authentication failed: ", response.statusText);
+          window.localStorage.removeItem("token");
+        }
+      } catch (error) {
+        console.error("Error verifying token:", error);
         window.localStorage.removeItem("token");
       }
     }
   };
 
- 
   const fetchData = async () => {
     try {
       const [usersRes, businessesRes, reviewsRes] = await Promise.all([
-        fetch("/api/users"),
-        fetch("/api/businesses"),
-        fetch("/api/reviews")
+        fetch("http://localhost:3000/api/users"),  
+        fetch("http://localhost:3000/api/businesses"),  
+        fetch("http://localhost:3000/api/reviews"),  
       ]);
 
-     
       if (usersRes.ok) {
         setUsers(await usersRes.json());
       }
@@ -68,10 +77,9 @@ function App() {
     }
   };
 
-  
   const authAction = async (credentials, mode) => {
     try {
-      const response = await fetch(`/api/auth/${mode}`, {
+      const response = await fetch(`http://localhost:3000/api/auth/${mode}`, { 
         method: "POST",
         body: JSON.stringify(credentials),
         headers: {
@@ -83,19 +91,40 @@ function App() {
       if (response.ok) {
         window.localStorage.setItem("token", json.token);
         attemptLoginWithToken();
+        navigate("/");  
       } else {
         throw new Error(json.message || "Authentication failed");
       }
     } catch (error) {
       console.error("Authentication error:", error);
-      throw error; 
+      throw error;
     }
   };
 
- 
+  const reviewFormAction = async (formData) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        setRefreshReviews(prev => !prev);  
+      } else {
+        throw new Error("Failed to submit review");
+      }
+    } catch (error) {
+      console.error("Review submission failed:", error);
+    }
+  };
+
   const logout = () => {
     window.localStorage.removeItem("token");
     setAuth({});
+    navigate("/login");  
   };
 
   return (
@@ -113,21 +142,21 @@ function App() {
           </>
         ) : (
           <>
-            <Link to="/login">Login</Link>
+              <Link to="/login">Login</Link>
           </>
         )}
       </nav>
 
       <Routes>
-        <Route path="/" element={<Home authAction={authAction} auth={auth} businesses={businesses} users={users} reviews={reviews} />} />
+        <Route path="/" element={<Home auth={auth} authAction={authAction} businesses={businesses} users={users} reviews={reviews} />} />
         <Route path="/businesses" element={<Businesses businesses={businesses} />} />
+        <Route path="/createReview/:businessId" element={<CreateReview auth={auth} authAction={authAction} reviewFormAction={reviewFormAction} setRefreshReviews={setRefreshReviews} businesses={businesses} />} />
         <Route path="/users" element={<Users users={users} />} />
         <Route path="/users/:id" element={<UserDetails auth={auth} users={users} />} />
         <Route path="/account" element={<Account auth={auth} />} />
         <Route path="/admin" element={<Admin auth={auth} users={users} businesses={businesses} />} />
         <Route path="/login" element={<Login authAction={authAction} />} />
         <Route path="/register" element={<Register authAction={authAction} />} />
-        {auth.id && <Route path="/createReview" element={<CreateReview />} />}
       </Routes>
 
       <Footer />
@@ -136,4 +165,3 @@ function App() {
 }
 
 export default App;
-
