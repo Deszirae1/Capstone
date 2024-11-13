@@ -31,6 +31,11 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Capstone project API');
 });
 
+// POST route
+app.post('/api/auth/me', (req, res) => {
+  res.send('POST request to the homepage');
+});
+
 // Routes
 app.use("/api", require("./api"));  // Import and mount API routes under /api
 
