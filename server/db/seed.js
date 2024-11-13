@@ -47,7 +47,7 @@ const init = async () => {
     await createTables();
     console.log("Tables created");
 
-    const [moe, lucy, ethyl, curly, john, mary, susan, rachel] = await Promise.all([
+    const users = await Promise.all([
       createUser({ username: "moe", password: "m_pw" }),
       createUser({ username: "lucy", password: "l_pw" }),
       createUser({ username: "ethyl", password: "e_pw" }),
@@ -58,9 +58,14 @@ const init = async () => {
       createUser({ username: "rachel", password: "r_pw" }),
     ]);
 
+    const usersMap = users.reduce((acc, { user }) => {
+      acc[user.username] = user;
+      return acc;
+    }, {});
+
     console.log("Users created:", await fetchUsers());
 
-    const [biz1, biz2, biz3, biz4] = await Promise.all([
+    const businesses = await Promise.all([
       createBusiness({
         businessname_full: "Clinique",
         street_address: "5767 Fifth Avenue", 
@@ -69,7 +74,6 @@ const init = async () => {
         zip: "10153", 
         price_range: "$$$"
       }),
-
       createBusiness({
         businessname_full: "Dior",
         street_address: "30 Avenue Montaigne", 
@@ -78,7 +82,6 @@ const init = async () => {
         zip: "10153", 
         price_range: "$$$$"
       }),
-
       createBusiness({
         businessname_full: "MAC",
         street_address: "One East 57th Street",
@@ -87,7 +90,6 @@ const init = async () => {
         zip: "10022", 
         price_range: "$$$"
       }),
-
       createBusiness({
         businessname_full: "NARS",
         street_address: "233 Spring Street", 
@@ -100,33 +102,33 @@ const init = async () => {
 
     console.log("Businesses created:", await fetchBusinesses());
 
-    const [review1, review2, review3, review4] = await Promise.all([
+    await Promise.all([
       createReview({
         title: "Perfect for sensitive skin",
         description: "Clinique makeup is perfect for sensitive skin! It offers great coverage, blends easily, and lasts all day without irritation. Highly recommend for a lightweight, skin-friendly option.",
-        user_id: moe.id,
-        business_id: biz1.id,
+        user_id: usersMap.moe.id,
+        business_id: businesses[0].id,
         rating: 5
       }),
       createReview({
         title: "Flawless finish",
         description: "Dior makeup delivers a flawless, luxurious finish with great coverage and lasting power. The formulas feel lightweight yet buildable, and they stay fresh throughout the day. Perfect for a glamorous look.",
-        user_id: lucy.id,
-        business_id: biz2.id,
+        user_id: usersMap.lucy.id,
+        business_id: businesses[1].id,
         rating: 4
       }),
       createReview({
         title: "Bold and Beautiful",
         description: "MAC makeup is perfect for bold, vibrant looks. The products offer excellent pigmentation, blend effortlessly, and stay put all day. A must-have for anyone who loves high-impact, dramatic makeup.",
-        user_id: ethyl.id,
-        business_id: biz3.id,
+        user_id: usersMap.ethyl.id,
+        business_id: businesses[2].id,
         rating: 4
       }),
       createReview({
         title: "Radiant and Refreshing",
         description: "NARS makeup delivers a stunning, natural glow with great buildable coverage. The products blend beautifully and last all day, making it perfect for a flawless, radiant look.",
-        user_id: curly.id,
-        business_id: biz4.id,
+        user_id: usersMap.curly.id,
+        business_id: businesses[3].id,
         rating: 4
       })
     ]);
