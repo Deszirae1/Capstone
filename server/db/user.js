@@ -62,9 +62,9 @@ const findUserWithToken = async (token) => {
 };
 
 
-const fetchUsers = async (userId) => {
-  const SQL = `SELECT * FROM users WHERE id=$1;`;
-  const response = await client.query(SQL, [userId]);
+const fetchUsers = async () => {
+  const SQL = `SELECT * FROM users;`;
+  const response = await client.query(SQL);
   return response.rows;
 };
 
