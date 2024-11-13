@@ -11,7 +11,8 @@ const createTables = async () => {
     CREATE TABLE users(
       id UUID PRIMARY KEY,
       username VARCHAR(20) UNIQUE NOT NULL,
-      password VARCHAR(255) NOT NULL
+      password VARCHAR(255) NOT NULL,
+      "isAdmin" BOOLEAN DEFAULT FALSE
     );
 
     CREATE TABLE businesses(

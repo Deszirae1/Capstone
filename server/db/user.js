@@ -25,7 +25,7 @@ const createUser = async ({ username, password, isAdmin = false }) => {
   }
 
   const SQL = `
-    INSERT INTO users(id, username, password, isAdmin) 
+    INSERT INTO users(id, username, password, "isAdmin") 
     VALUES($1, $2, $3, $4) 
     RETURNING *
   `;
@@ -71,7 +71,7 @@ const fetchUsers = async (userId) => {
 
 const getUsersWithReviewSummary = async () => {
   const SQL = `
-    SELECT u.id, u.username, u.isAdmin, COUNT(r.id) AS review_count
+    SELECT u.id, u.username, u."isAdmin", COUNT(r.id) AS review_count
     FROM users u
     LEFT JOIN reviews r ON u.id = r.user_id
     GROUP BY u.id;
