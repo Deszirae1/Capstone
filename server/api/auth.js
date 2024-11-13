@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 
+
 const { isLoggedIn } = require("./utils");
 const { authenticate, createUser, findUserWithToken } = require("../db");
 

@@ -2,7 +2,7 @@ const { client } = require("./client");
 const uuid = require("uuid");
 
 const createBusiness = async ({ 
-  businessname_full, street_address, city, state, zip, price_range,
+  businessname_full, street_address, city, state, zip, price_range
 }) => {
   if (!businessname_full) {
     const error = Error("Please provide full business name!");
@@ -20,8 +20,8 @@ const createBusiness = async ({
   });
 
   const SQL = `
-    INSERT INTO businesses(id, businessname_full, street_address, city, state, zip) 
-    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
+    INSERT INTO businesses(id, businessname_full, street_address, city, state, zip, price_range) 
+    VALUES($1, $2, $3, $4, $5, $6, $7) 
     RETURNING *;
   `;
 
@@ -32,13 +32,11 @@ const createBusiness = async ({
     city,
     state,
     zip,
-    price_range,
-    features ? JSON.stringify(features) : null
+    price_range
   ]);
 
   return response.rows[0];
 };
-
 
 const fetchBusinesses = async () => {
   const SQL = `
@@ -57,7 +55,6 @@ const fetchBusinesses = async () => {
   return response.rows;
 };
 
-
 const fetchBusiness = async (id) => {
   const SQL = `
     SELECT 
@@ -72,7 +69,6 @@ const fetchBusiness = async (id) => {
     const { rows: [business] }  = await client.query(SQL, [id]);
     console.log("Fetched Business:", business);
     return business;
-  };
-
+};
 
 module.exports = { createBusiness, fetchBusinesses, fetchBusiness };
