@@ -3,7 +3,6 @@ const router = express.Router();
 const { fetchUsers, getUsersReviews, getUsersWithReviewSummary, deleteUser } = require("../db");
 const { authMiddleware } = require("./utils");
 
-
 router.get("/", async (req, res, next) => {
   try {
     const users = await fetchUsers();
@@ -14,7 +13,6 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-
 router.get("/UsersWithReviewSummary", async (req, res, next) => {
   try {
     const usersWithSummary = await getUsersWithReviewSummary();
@@ -24,7 +22,6 @@ router.get("/UsersWithReviewSummary", async (req, res, next) => {
     next(ex);
   }
 });
-
 
 router.get("/:id/reviews", async (req, res, next) => {
   try {
@@ -40,8 +37,7 @@ router.get("/:id/reviews", async (req, res, next) => {
   }
 });
 
-
-router.delete("/:id", authMiddleware, async (req, res) => {
+router.delete("/:id", authMiddleware, async (req, res, next) => {
   const userId = req.params.id;
 
   try {
@@ -53,6 +49,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
   } catch (error) {
     console.error("ERROR deleting user:", error); 
     res.status(error.status || 500).json({ message: error.message });
+    next(error);
   }
 });
 
