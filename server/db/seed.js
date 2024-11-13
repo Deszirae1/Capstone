@@ -58,7 +58,7 @@ const init = async () => {
       createUser({ username: "rachel", password: "r_pw" }),
     ]);
 
-    console.log(await fetchUsers());
+    console.log("Users created:", await fetchUsers());
 
     const [biz1, biz2, biz3, biz4] = await Promise.all([
       createBusiness({
@@ -98,7 +98,7 @@ const init = async () => {
       })
     ]);
 
-    console.log(await fetchBusinesses());
+    console.log("Businesses created:", await fetchBusinesses());
 
     const [review1, review2, review3, review4] = await Promise.all([
       createReview({
@@ -131,7 +131,7 @@ const init = async () => {
       })
     ]);
 
-    console.log(await fetchReviews());
+    console.log("Reviews created:", await fetchReviews());
 
     client.end();
   } catch (error) {
