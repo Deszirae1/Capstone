@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { fetchUsers, getUsersReviews, getUsersWithReviewSummary, deleteUser } = require("../db");
-const { authMiddleware } = require("./utils");
+const { isLoggedIn } = require("./utils");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -37,7 +37,7 @@ router.get("/:id/reviews", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", authMiddleware, async (req, res, next) => {
+router.delete("/:id", isLoggedIn, async (req, res, next) => {
   const userId = req.params.id;
 
   try {
