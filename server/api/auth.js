@@ -2,25 +2,20 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 
-
 const { isLoggedIn } = require("./utils");
 const { authenticate, createUser, findUserWithToken } = require("../db");
-
 
 router.get("/", (req, res) => {
   res.send("Hello from auth file api");
 });
 
-
 router.post("/login", async (req, res, next) => {
   try {
-    
     const user = await authenticate(req.body);
     if (!user) {
       return res.status(401).json({ status: 'error', message: 'Invalid credentials' });
     }
 
-    
     res.json({
       status: 'success',
       data: {
@@ -33,7 +28,6 @@ router.post("/login", async (req, res, next) => {
     next(ex);
   }
 });
-
 
 router.post("/register", async (req, res, next) => {
   try {
@@ -51,7 +45,6 @@ router.post("/register", async (req, res, next) => {
     next(ex);
   }
 });
-
 
 router.get("/me", isLoggedIn, (req, res, next) => {
   try {

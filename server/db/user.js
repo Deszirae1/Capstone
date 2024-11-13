@@ -3,6 +3,7 @@ require('dotenv').config();
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { findUserWithToken } = require('../db');
 
 
 const JWT = process.env.JWT || "shhh";
