@@ -3,16 +3,12 @@ require('dotenv').config();
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { findUserWithToken } = require('../db');
-
 
 const JWT = process.env.JWT || "shhh";
-
 
 if (JWT === "shhh" && process.env.NODE_ENV !== "production") {
   console.log("Warning: In production, ensure process.env.JWT is set to a secure value!");
 }
-
 
 const errorHandler = (message, statusCode) => {
   const error = new Error(message);
@@ -39,7 +35,6 @@ const createUser = async ({ username, password, isAdmin = false }) => {
   return { success: true, user: response.rows[0] };
 };
 
-
 const findUserWithToken = async (token) => {
   let id;
   try {
@@ -62,13 +57,11 @@ const findUserWithToken = async (token) => {
   return response.rows[0];
 };
 
-
 const fetchUsers = async () => {
   const SQL = `SELECT * FROM users;`;
   const response = await client.query(SQL);
   return response.rows;
 };
-
 
 const getUsersWithReviewSummary = async () => {
   const SQL = `
@@ -81,7 +74,6 @@ const getUsersWithReviewSummary = async () => {
   const response = await client.query(SQL);
   return response.rows;
 };
-
 
 const authenticate = async ({ username, password }) => {
   const SQL = `
