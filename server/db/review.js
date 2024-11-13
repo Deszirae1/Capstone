@@ -1,7 +1,6 @@
 const { client } = require("./client");
 const uuid = require("uuid");
 
-
 const createError = (message, status = 400) => {
   const error = new Error(message);
   error.status = status;
@@ -9,6 +8,7 @@ const createError = (message, status = 400) => {
 };
 
 const createReview = async ({ title, description, user_id, business_id, rating }) => {
+  console.log("Creating review with data:", { title, description, user_id, business_id, rating }); // Add this line
   if (!title || !rating || !description || !business_id || !user_id) {
     createError("All fields required!", 401);
   }
