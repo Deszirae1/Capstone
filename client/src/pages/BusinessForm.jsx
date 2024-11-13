@@ -9,10 +9,13 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log("Submitting form with data:", { name, address, productType }); // Debugging log
     try {
       await businessFormAction({ name, address, productType });
+      console.log("Form submitted successfully"); // Debugging log
       onClose();
     } catch (err) {
+      console.error("Error submitting form:", err); // Debugging log
       setError('Failed to submit info. Please try again.');
     }
   };
