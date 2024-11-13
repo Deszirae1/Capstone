@@ -33,8 +33,8 @@ app.get('/', (req, res) => {
 
 // GET Route  
 app.get('/api/auth/me', (req, res) => {
-  // Add your logic here to handle the GET request
-  res.send('GET request to /api/auth/me');
+  // Implement your logic here
+  res.json({ message: 'GET request to /api/auth/me' });
 });
 
 // Routes
