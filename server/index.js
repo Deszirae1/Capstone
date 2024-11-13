@@ -31,9 +31,10 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Capstone project API');
 });
 
-// POST route
-app.post('/api/auth/me', (req, res) => {
-  res.send('POST request to the homepage');
+// GET Route  
+app.get('/api/auth/me', (req, res) => {
+  // Add your logic here to handle the GET request
+  res.send('GET request to /api/auth/me');
 });
 
 // Routes
