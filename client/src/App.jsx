@@ -86,12 +86,11 @@ function App() {
           "Content-Type": "application/json",
         },
       });
-
       const json = await response.json();
       if (response.ok) {
         window.localStorage.setItem("token", json.token);
         attemptLoginWithToken();
-        navigate("/");  
+        navigate("/");
       } else {
         throw new Error(json.message || "Authentication failed");
       }

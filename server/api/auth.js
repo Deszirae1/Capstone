@@ -37,23 +37,12 @@ router.post("/login", async (req, res, next) => {
 
 router.post("/register", async (req, res, next) => {
   try {
-   
     const user = await createUser(req.body);
     if (!user) {
       return res.status(400).json({ status: 'error', message: 'User registration failed' });
     }
-
-  
-    const token = await authenticate(user);
-
-    
-    res.json({
-      status: 'success',
-      data: {
-        token,
-        user
-      }
-    });
+    const token = await authenticate(user); // Ensure this line works as expected
+    res.json({ status: 'success', data: { token, user } });
   } catch (ex) {
     console.error('Error during registration:', ex);
     next(ex);
