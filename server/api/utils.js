@@ -1,6 +1,6 @@
 const { findUserWithToken } = require("../db");
 
-const isLoggedIn = async (req, next) => {
+const isLoggedIn = async (req, res, next) => {
   try {
     req.user = await findUserWithToken(req.headers.authorization);
     next();
