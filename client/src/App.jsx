@@ -31,16 +31,14 @@ function App() {
 
   const attemptLoginWithToken = async () => {
     const token = window.localStorage.getItem("token");
-  
     if (token) {
       try {
         const response = await fetch("http://localhost:3000/api/auth/me", {
-          method: "GET", 
+          method: "GET",
           headers: {
             authorization: `Bearer ${token}`,
           },
         });
-  
         if (response.ok) {
           const json = await response.json();
           setAuth(json);
