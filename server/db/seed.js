@@ -35,7 +35,7 @@ const createTables = async () => {
       UNIQUE (user_id, business_id)
     );
   `;
-  await client.query(SQL);  // This should now work since `client` is initialized correctly
+  await client.query(SQL);
 };
 
 const init = async () => {
