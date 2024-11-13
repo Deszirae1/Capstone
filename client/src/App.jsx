@@ -118,7 +118,27 @@ function App() {
     }
   };
 
-  const logout = () => {
+  const businessFormAction = async (formData) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/businesses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setBusinesses((prev) => [...prev, await response.json()]);
+      } else {
+        throw new Error("Failed to submit business");
+      }
+    } catch (error) {
+      console.error("Business submission failed:", error);
+    }
+  };
+
+  const logout = async () => {
     window.localStorage.removeItem("token");
     setAuth({});
     navigate("/login");  
@@ -146,7 +166,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home auth={auth} authAction={authAction} businesses={businesses} users={users} reviews={reviews} />} />
-        <Route path="/businesses" element={<Businesses businesses={businesses} />} />
+        <Route path="/businesses" element={<Businesses businesses={businesses} businessFormAction={businessFormAction} />} />
         <Route path="/createReview/:businessId" element={<CreateReview auth={auth} authAction={authAction} reviewFormAction={reviewFormAction} setRefreshReviews={setRefreshReviews} businesses={businesses} />} />
         <Route path="/users" element={<Users users={users} />} />
         <Route path="/users/:id" element={<UserDetails auth={auth} users={users} />} />
