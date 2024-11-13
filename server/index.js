@@ -13,7 +13,12 @@ client.connect()
    });
 
 // Middleware
-app.use(cors());           // Enable Cross-Origin Resource Sharing (CORS)
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));           // Enable Cross-Origin Resource Sharing (CORS)
 app.use(express.json());   // Parse incoming JSON requests
 
 // Routes
