@@ -40,17 +40,13 @@ const createTables = async () => {
 
 const init = async () => {
   try {
-    // Ensure that we connect to the database
     console.log("Connecting to database...");
-    await client.connect();  // Connect to the database before running any queries
-    
+    await client.connect();
     console.log("Connected to the database");
 
-    // Create the necessary tables
     await createTables();
     console.log("Tables created");
 
-    // Insert sample users, businesses, and reviews
     const [moe, lucy, ethyl, curly, john, mary, susan, rachel] = await Promise.all([
       createUser({ username: "moe", password: "m_pw" }),
       createUser({ username: "lucy", password: "l_pw" }),
@@ -65,36 +61,36 @@ const init = async () => {
     console.log(await fetchUsers());
 
     const [biz1, biz2, biz3, biz4] = await Promise.all([
-      createBusiness({ 
-        businessname_full: "Clinique", 
-        location_address: "5767 Fifth Avenue", 
+      createBusiness({
+        businessname_full: "Clinique",
+        street_address: "5767 Fifth Avenue", 
         city: "New York", 
         state: "New York", 
         zip: "10153", 
         price_range: "$$$"
       }),
 
-      createBusiness({ 
-        businessname_full: "Dior", 
-        location_address: "30 Avenue Montaigne", 
+      createBusiness({
+        businessname_full: "Dior",
+        street_address: "30 Avenue Montaigne", 
         city: "New York", 
         state: "New York", 
         zip: "10153", 
         price_range: "$$$$"
       }),
 
-      createBusiness({ 
-        businessname_full: "MAC", 
-        location_address: "One East 57th Street",
+      createBusiness({
+        businessname_full: "MAC",
+        street_address: "One East 57th Street",
         city: "New York", 
         state: "New York", 
         zip: "10022", 
         price_range: "$$$"
       }),
 
-      createBusiness({ 
-        businessname_full: "NARS", 
-        location_address: "233 Spring Street", 
+      createBusiness({
+        businessname_full: "NARS",
+        street_address: "233 Spring Street", 
         city: "New York", 
         state: "New York", 
         zip: "10013", 
@@ -105,39 +101,39 @@ const init = async () => {
     console.log(await fetchBusinesses());
 
     const [review1, review2, review3, review4] = await Promise.all([
-      createReview({ 
-        title: "Perfect for sensitive skin", 
-        description: "Clinique makeup is perfect for sensitive skin! It offers great coverage, blends easily, and lasts all day without irritation. Highly recommend for a lightweight, skin-friendly option!", 
-        user_id: moe.id, 
-        business_id: biz1.id, 
+      createReview({
+        title: "Perfect for sensitive skin",
+        description: "Clinique makeup is perfect for sensitive skin! It offers great coverage, blends easily, and lasts all day without irritation. Highly recommend for a lightweight, skin-friendly option.",
+        user_id: moe.id,
+        business_id: biz1.id,
         rating: 5
       }),
-      createReview({ 
-        title: "Flawless finish", 
-        description: "Dior makeup delivers a flawless, luxurious finish with great coverage and lasting power. The formulas feel lightweight yet buildable, and they stay fresh throughout the day. Perfect for a high-end, reliable option!", 
-        user_id: lucy.id, 
-        business_id: biz2.id, 
+      createReview({
+        title: "Flawless finish",
+        description: "Dior makeup delivers a flawless, luxurious finish with great coverage and lasting power. The formulas feel lightweight yet buildable, and they stay fresh throughout the day. Perfect for a glamorous look.",
+        user_id: lucy.id,
+        business_id: biz2.id,
         rating: 4
       }),
-      createReview({ 
-        title: "Bold and Beautiful", 
-        description: "MAC makeup is perfect for bold, vibrant looks. The products offer excellent pigmentation, blend effortlessly, and stay put all day. A must-have for anyone who loves high-impact, long-lasting makeup!",
+      createReview({
+        title: "Bold and Beautiful",
+        description: "MAC makeup is perfect for bold, vibrant looks. The products offer excellent pigmentation, blend effortlessly, and stay put all day. A must-have for anyone who loves high-impact, dramatic makeup.",
         user_id: ethyl.id,
-        business_id: biz3.id, 
+        business_id: biz3.id,
         rating: 4
       }),
-      createReview({ 
-        title: "Radiant and Refreshing", 
-        description: "NARS makeup delivers a stunning, natural glow with great buildable coverage. The products blend beautifully and last all day, making it perfect for a flawless, radiant look.", 
-        user_id: curly.id, 
-        business_id: biz4.id, 
+      createReview({
+        title: "Radiant and Refreshing",
+        description: "NARS makeup delivers a stunning, natural glow with great buildable coverage. The products blend beautifully and last all day, making it perfect for a flawless, radiant look.",
+        user_id: curly.id,
+        business_id: biz4.id,
         rating: 4
       })
     ]);
 
     console.log(await fetchReviews());
 
-    client.end();  // Don't forget to close the client connection when done
+    client.end();
   } catch (error) {
     console.error('Error seeding the database:', error);
   }
