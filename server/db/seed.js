@@ -4,9 +4,9 @@ const { createUser, fetchUsers, createBusiness, fetchBusinesses, createReview, f
 
 const createTables = async () => {
   const SQL = `
-    DROP TABLE IF EXISTS users;
-    DROP TABLE IF EXISTS businesses;
-    DROP TABLE IF EXISTS reviews;
+    DROP TABLE IF EXISTS users CASCADE;
+    DROP TABLE IF EXISTS businesses CASCADE;
+    DROP TABLE IF EXISTS reviews CASCADE;
     
     CREATE TABLE users(
       id UUID PRIMARY KEY,
@@ -18,7 +18,7 @@ const createTables = async () => {
     CREATE TABLE businesses(
       id UUID PRIMARY KEY,
       businessname_full VARCHAR(255) NOT NULL,
-      location_address VARCHAR(255) NOT NULL,
+      street_address VARCHAR(255) NOT NULL,
       city VARCHAR(64) NOT NULL,
       state VARCHAR(64) NOT NULL,
       zip VARCHAR(64) NOT NULL,
