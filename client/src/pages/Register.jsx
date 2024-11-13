@@ -9,22 +9,21 @@ const Register = ({ authAction }) => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
-  const handleAuthSuccess = () => {
-    navigate("/");  // Redirect to the home page after successful registration
-  };
-
-  const handleAuthError = (errorMessage) => {
-    setError(errorMessage);  // Show error message on registration failure
+  const handleAuthAction = async (data) => {
+    try {
+      await authAction(data, "register"); // Ensure the mode is correctly set to "register"
+      navigate("/"); // Redirect user to the home page after successful registration
+    } catch (error) {
+      setError("Registration failed: " + error.message); // Show error message on registration failure
+    }
   };
 
   return (
     <div>
       <h1>Be our friend!</h1>
       <AuthForm 
-        authAction={authAction}  // Pass the authAction function as prop
+        authAction={handleAuthAction} // Pass the handleAuthAction function as prop
         mode="register" 
-        onSuccess={handleAuthSuccess} 
-        onError={handleAuthError} 
         buttonClassName="smaller-btn" 
       />
       {error && <div className="error-message">{error}</div>} {/* Show error message if any */}

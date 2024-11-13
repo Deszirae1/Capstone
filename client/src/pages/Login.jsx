@@ -11,7 +11,7 @@ const Login = ({ authAction }) => {
   // Define the auth action handler to handle the response and navigation
   const handleAuthAction = async (data) => {
     try {
-      await authAction(data); // Call the auth action (like login)
+      await authAction(data, "login"); 
       navigate("/"); // Redirect user to the dashboard or home page
     } catch (error) {
       console.error("Login failed:", error);

@@ -19,6 +19,8 @@ app.use(express.json());   // Parse incoming JSON requests
 // Routes
 app.use("/api", require("./api"));  // Import and mount API routes under /api
 
+
+
 // Global error handler middleware
 app.use((err, req, res, next) => {
   console.error(err);  // Log the error details to the console
