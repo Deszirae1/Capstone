@@ -23,6 +23,9 @@ const corsOptions = {
 app.use(cors(corsOptions));           // Enable Cross-Origin Resource Sharing (CORS)
 app.use(express.json());   // Parse incoming JSON requests
 
+// Handle preflight requests
+app.options('*', cors(corsOptions)); 
+
 // Routes
 app.use("/api", require("./api"));  // Import and mount API routes under /api
 
