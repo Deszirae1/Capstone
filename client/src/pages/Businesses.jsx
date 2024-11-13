@@ -1,11 +1,3 @@
-// import { ThemeProvider, createTheme } from '@mui/material/styles';
-// import CardHeader from '@mui/material/CardHeader';
-// import Avatar from '@mui/material/Avatar';
-// import Typography from '@mui/material/Typography';
-// import CardMedia from '@mui/material/CardMedia';
-// import IconButton from '@mui/material/IconButton';
-// import CardContent from '@mui/material/CardContent'; (not used, Javier showed us this. May use later.)
-
 import { useState } from "react";
 import { Button } from '@mui/material';
 import BusinessForm from "./BusinessForm";
@@ -26,7 +18,7 @@ const Businesses = ({ auth, businesses, businessFormAction }) => {
       <BusinessesContainer businesses={businesses} auth={auth} />
 
       {!isFormVisible && (
-        <div // button placement and styling
+        <div
           style={{
             display: 'flex',
             justifyContent: 'center',

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import AuthForm from './components/AuthForm/AuthForm';
 import Users from "./pages/Users";
 import Businesses from "./pages/Businesses";
 import CreateReview from "./pages/CreateReview";
@@ -27,7 +26,7 @@ function App() {
   useEffect(() => {
     attemptLoginWithToken();
     fetchData();
-  }, []);
+    }, [refreshReviews]);
 
   const attemptLoginWithToken = async () => {
     const token = window.localStorage.getItem("token");
@@ -127,9 +126,10 @@ function App() {
         },
         body: JSON.stringify(formData),
       });
-
+  
       if (response.ok) {
-        setBusinesses((prev) => [...prev, await response.json()]);
+        const newBusiness = await response.json();
+        setBusinesses((prev) => [...prev, newBusiness]);
       } else {
         throw new Error("Failed to submit business");
       }
@@ -138,7 +138,7 @@ function App() {
     }
   };
 
-  const logout = async () => {
+  const logout = () => {
     window.localStorage.removeItem("token");
     setAuth({});
     navigate("/login");  
