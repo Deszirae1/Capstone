@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 
-const BusinessForm = () => {
+const BusinessForm = ({ businessFormAction, onClose }) => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [productType, setProductType] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    try {
+      await businessFormAction({ name, address, productType });
+      onClose();
+    } catch (err) {
+      setError('Failed to submit info. Please try again.');
+    }
   };
 
   return (
     <div
       style={{
         display: 'flex',
-        justifyContent: 'center',  // Horizontally center the form
-        paddingTop: '40px',         // Adjusts space from top of page 
+        justifyContent: 'center',
+        paddingTop: '40px',
       }}
     >
       <form
@@ -53,8 +59,8 @@ const BusinessForm = () => {
         <TextField
           label="Product Type(s) and Name(s)"
           variant="outlined"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
+          value={productType}
+          onChange={(e) => setProductType(e.target.value)}
           margin="normal"
           style={{ width: '100%' }}
         />
@@ -64,14 +70,14 @@ const BusinessForm = () => {
             type="submit"
             variant="contained"
             sx={{
-              backgroundColor: 'black',  
-              color: '#FFFFFF',          
-              padding: '6px 12px',       
-              fontSize: '14px',          
-              width: 'auto',            
-              marginTop: '16px',        
+              backgroundColor: 'black',
+              color: '#FFFFFF',
+              padding: '6px 12px',
+              fontSize: '14px',
+              width: 'auto',
+              marginTop: '16px',
               '&:hover': {
-                backgroundColor: '#ff00cc',  
+                backgroundColor: '#ff00cc',
               },
             }}
           >

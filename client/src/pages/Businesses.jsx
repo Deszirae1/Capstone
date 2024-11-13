@@ -25,13 +25,12 @@ const Businesses = ({ auth, businesses, businessFormAction }) => {
 
       <BusinessesContainer businesses={businesses} auth={auth} />
 
-      {/* Show the "Add New Business for Review" button only when the form is not visible */}
       {!isFormVisible && (
         <div // button placement and styling
           style={{
             display: 'flex',
-            justifyContent: 'center',  
-            marginTop: '20px',         
+            justifyContent: 'center',
+            marginTop: '20px',
           }}
         >
           <Button
@@ -40,7 +39,7 @@ const Businesses = ({ auth, businesses, businessFormAction }) => {
               backgroundColor: 'black',
               color: '#FFFFFF',
               '&:hover': {
-                backgroundColor: '#ff00cc', 
+                backgroundColor: '#ff00cc',
               },
             }}
             onClick={handleShowForm}
@@ -50,7 +49,6 @@ const Businesses = ({ auth, businesses, businessFormAction }) => {
         </div>
       )}
 
-      {/* Show the BusinessForm if it's visible */}
       {isFormVisible && (
         <BusinessForm 
           authId={auth?.id} 
