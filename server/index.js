@@ -26,6 +26,11 @@ app.use(express.json());   // Parse incoming JSON requests
 // Handle preflight requests
 app.options('*', cors(corsOptions)); 
 
+// Root route
+app.get('/', (req, res) => {
+  res.send('Welcome to the Capstone project API');
+});
+
 // Routes
 app.use("/api", require("./api"));  // Import and mount API routes under /api
 
