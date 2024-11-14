@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { verifyToken } = require("../middleware/auth"); 
+const { verifyToken } = require("../middleware/auth");
 
 const { fetchBusinesses, createBusiness, fetchBusiness, getBusinessReviews } = require("../db");
 const { isLoggedIn } = require("./utils");
@@ -69,15 +69,15 @@ router.get("/:id/reviews", async (req, res, next) => {
 });
 
 // POST create a new business
-router.post("/", isLoggedIn,  async (req, res, next) => {
+router.post("/", isLoggedIn, async (req, res, next) => {
   try {
-    const { name, address, city, description, productTypes } = req.body;
+    const { name, address, city, state, zip, street_address, description, productTypes, price_range } = req.body;
 
-    // Validate the body (name, address, city, description, productTypes should not be empty)
-    if (!name || !address || !city || !description || !productTypes) {
+    // Validate the body (name, address, city, state, zip, street_address, description, productTypes, price_range should not be empty)
+    if (!name || !address || !city || !state || !zip || !street_address || !description || !productTypes || !price_range) {
       return next({
         name: "Request no good",
-        message: "Business name, address, city, description, productTypes are required",
+        message: "Business name, address, city, state, zip, street_address, description, productTypes, and price_range are required",
       });
     }
 

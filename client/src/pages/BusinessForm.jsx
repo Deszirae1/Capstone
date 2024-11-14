@@ -5,22 +5,26 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
   const [name, setName] = useState('');
   const [businessname_full, setBusinessnameFull] = useState('');
   const [address, setAddress] = useState('');
-  const [city, setCity] = useState(''); // Add city field
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [zip, setZip] = useState('');
+  const [street_address, setStreetAddress] = useState('');
   const [description, setDescription] = useState('');
   const [productType, setProductType] = useState('');
+  const [price_range, setPriceRange] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitting form with data:", { name, businessname_full, address, city, description, productType });
-    
-    if (!name || !businessname_full || !address || !city || !description || !productType) {
+    console.log("Submitting form with data:", { name, businessname_full, address, city, state, zip, street_address, description, productType, price_range });
+
+    if (!name || !businessname_full || !address || !city || !state || !zip || !street_address || !description || !productType || !price_range) {
       setError('All fields are required.');
       return;
     }
 
     try {
-      await businessFormAction({ name, businessname_full, address, city, description, productType });
+      await businessFormAction({ name, businessname_full, address, city, state, zip, street_address, description, productType, price_range });
       console.log("Form submitted successfully");
       onClose();
     } catch (err) {
@@ -56,17 +60,35 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
         <TextField
           label="Street Address"
           variant="outlined"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          value={street_address}
+          onChange={(e) => setStreetAddress(e.target.value)}
           margin="normal"
           style={{ width: '100%' }}
         />
 
         <TextField
-          label="City" // Add city field
+          label="City"
           variant="outlined"
           value={city}
           onChange={(e) => setCity(e.target.value)}
+          margin="normal"
+          style={{ width: '100%' }}
+        />
+
+        <TextField
+          label="State"
+          variant="outlined"
+          value={state}
+          onChange={(e) => setState(e.target.value)}
+          margin="normal"
+          style={{ width: '100%' }}
+        />
+
+        <TextField
+          label="Zip"
+          variant="outlined"
+          value={zip}
+          onChange={(e) => setZip(e.target.value)}
           margin="normal"
           style={{ width: '100%' }}
         />
@@ -85,6 +107,15 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
           variant="outlined"
           value={productType}
           onChange={(e) => setProductType(e.target.value)}
+          margin="normal"
+          style={{ width: '100%' }}
+        />
+
+        <TextField
+          label="Price Range"
+          variant="outlined"
+          value={price_range}
+          onChange={(e) => setPriceRange(e.target.value)}
           margin="normal"
           style={{ width: '100%' }}
         />
