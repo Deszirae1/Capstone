@@ -146,7 +146,7 @@ function App() {
         console.log("Business submitted successfully:", newBusiness); 
       } else {
         const errorText = await response.text();
-        console.error("Failed to submit business:",
+        console.error("Failed to submit business:", errorText);
         throw new Error("Failed to submit business");
       }
     } catch (error) {
