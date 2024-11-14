@@ -12,6 +12,12 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("Submitting form with data:", { name, businessname_full, address, description, productType });
+    
+    if (!name || !businessname_full || !address || !description || !productType) {
+      setError('All fields are required.');
+      return;
+    }
+
     try {
       await businessFormAction({ name, businessname_full, address, description, productType });
       console.log("Form submitted successfully");
