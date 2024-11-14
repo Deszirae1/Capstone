@@ -13,7 +13,10 @@ const validateBusinessID = (id) => {
 router.get("/", isLoggedIn, async (req, res, next) => {
   try {
     const businesses = await fetchBusinesses();
-    res.json(businesses);
+    const filteredBusinesses = businesses.map(({ businessname_full, street_address, city, state, zip, price_range }) => {
+      return { businessname_full, street_address, city, state, zip, price_range };
+    });
+    res.json(filteredBusinesses);
   } catch (ex) {
     next(ex);
   }
@@ -37,7 +40,8 @@ router.get("/:id", async (req, res, next) => {
       return next({ name: "Not Found", message: "No matching business found" });
     }
 
-    res.json(business);
+    const { businessname_full, street_address, city, state, zip, price_range } = business;
+    res.json({ businessname_full, street_address, city, state, zip, price_range });
   } catch (ex) {
     next(ex);
   }

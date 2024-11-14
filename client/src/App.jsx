@@ -59,10 +59,14 @@ function App() {
     try {
       const [usersRes, businessesRes, reviewsRes] = await Promise.all([
         fetch("http://localhost:3000/api/users"),
-        fetch("http://localhost:3000/api/businesses"),
+        fetch("http://localhost:3000/api/businesses", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }),
         fetch("http://localhost:3000/api/reviews"),
       ]);
-
+  
       if (usersRes.ok) {
         setUsers(await usersRes.json());
         console.log("Fetched users:", users); // Added log
