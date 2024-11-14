@@ -64,7 +64,11 @@ function App() {
             "Authorization": `Bearer ${token}`
           }
         }),
-        fetch("http://localhost:3000/api/reviews"),
+        fetch("http://localhost:3000/api/reviews", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }),
       ]);
   
       if (usersRes.ok) {
