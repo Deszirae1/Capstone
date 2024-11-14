@@ -3,6 +3,7 @@ import { TextField, Button } from '@mui/material';
 
 const BusinessForm = ({ businessFormAction, onClose }) => {
   const [name, setName] = useState('');
+  const [businessname_full, setBusinessnameFull] = useState('');
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
   const [productType, setProductType] = useState('');
@@ -10,9 +11,9 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitting form with data:", { name, address, description, productType });
+    console.log("Submitting form with data:", { name, businessname_full, address, description, productType });
     try {
-      await businessFormAction({ name, address, description, productType });
+      await businessFormAction({ name, businessname_full, address, description, productType });
       console.log("Form submitted successfully");
       onClose();
     } catch (err) {
@@ -36,6 +37,15 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
           style={{ width: '100%' }}
         />
         
+        <TextField
+          label="Full Business Name"
+          variant="outlined"
+          value={businessname_full}
+          onChange={(e) => setBusinessnameFull(e.target.value)}
+          margin="normal"
+          style={{ width: '100%' }}
+        />
+
         <TextField
           label="Street Address"
           variant="outlined"
