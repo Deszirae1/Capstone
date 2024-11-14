@@ -72,7 +72,7 @@ router.post("/", async (req, res, next) => {
   try {
     const { name, address, productTypes,  } = req.body;
 
-    // Validate the body (name, address, productTypes should not be empty)
+    // Validate the body (name, address, productType should not be empty)
     if (!name || !address, !productTypes) {
       return next({
         name: "Request no good",
