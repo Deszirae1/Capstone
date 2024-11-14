@@ -4,41 +4,26 @@ import { TextField, Button } from '@mui/material';
 const BusinessForm = ({ businessFormAction, onClose }) => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
-  const [description, setDescription] = useState(''); // New description state
+  const [description, setDescription] = useState('');
   const [productType, setProductType] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitting form with data:", { name, address, description, productType }); // Debugging log
+    console.log("Submitting form with data:", { name, address, description, productType });
     try {
-      await businessFormAction({ name, address, description, productType }); // Include description
-      console.log("Form submitted successfully"); // Debugging log
+      await businessFormAction({ name, address, description, productType });
+      console.log("Form submitted successfully");
       onClose();
     } catch (err) {
-      console.error("Error submitting form:", err); // Debugging log
+      console.error("Error submitting form:", err);
       setError('Failed to submit info. Please try again.');
     }
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        paddingTop: '40px',
-      }}
-    >
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-          width: '100%',
-          maxWidth: '500px',
-        }}
-      >
+    <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '40px' }}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', maxWidth: '500px' }}>
         <h2>Business for Review</h2>
         {error && <div className="error">{error}</div>}
         
