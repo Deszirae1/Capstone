@@ -70,13 +70,13 @@ router.get("/:id/reviews", async (req, res, next) => {
 // POST create a new business
 router.post("/", async (req, res, next) => {
   try {
-    const { name, address, productType,  } = req.body;
+    const { name, address, productTypes,  } = req.body;
 
     // Validate the body (name, address, productType should not be empty)
-    if (!name || !address, !productType) {
+    if (!name || !address || !description|| !productTypes) {
       return next({
         name: "Request no good",
-        message: "Business name, address, prodcutTypes are required",
+        message: "Business name, address, description, prodcutTypes are required",
       });
     }
 
