@@ -71,13 +71,13 @@ router.get("/:id/reviews", async (req, res, next) => {
 // POST create a new business
 router.post("/", isLoggedIn, async (req, res, next) => {
   try {
-    const { name, address, city, state, zip, street_address, description, productTypes, price_range } = req.body;
+    const { businessname_full, street_address, city, state, zip, price_range } = req.body;
 
-    // Validate the body (name, address, city, state, zip, street_address, description, productTypes, price_range should not be empty)
-    if (!name || !address || !city || !state || !zip || !street_address || !description || !productTypes || !price_range) {
+    // Validate the body (businessname_full, street_address, city, state, zip, price_range should not be empty)
+    if (!businessname_full || !street_address || !city || !state || !zip || !price_range) {
       return next({
         name: "Request no good",
-        message: "Business name, address, city, state, zip, street_address, description, productTypes, and price_range are required",
+        message: "Full business name, street address, city, state, zip, and price range are required",
       });
     }
 

@@ -2,29 +2,25 @@ import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 
 const BusinessForm = ({ businessFormAction, onClose }) => {
-  const [name, setName] = useState('');
   const [businessname_full, setBusinessnameFull] = useState('');
-  const [address, setAddress] = useState('');
+  const [street_address, setStreetAddress] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
-  const [street_address, setStreetAddress] = useState('');
-  const [description, setDescription] = useState('');
-  const [productType, setProductType] = useState('');
   const [price_range, setPriceRange] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitting form with data:", { name, businessname_full, address, city, state, zip, street_address, description, productType, price_range });
+    console.log("Submitting form with data:", { businessname_full, street_address, city, state, zip, price_range });
 
-    if (!name || !businessname_full || !address || !city || !state || !zip || !street_address || !description || !productType || !price_range) {
+    if (!businessname_full || !street_address || !city || !state || !zip || !price_range) {
       setError('All fields are required.');
       return;
     }
 
     try {
-      await businessFormAction({ name, businessname_full, address, city, state, zip, street_address, description, productType, price_range });
+      await businessFormAction({ businessname_full, street_address, city, state, zip, price_range });
       console.log("Form submitted successfully");
       onClose();
     } catch (err) {
@@ -38,15 +34,6 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', maxWidth: '500px' }}>
         <h2>Business for Review</h2>
         {error && <div className="error">{error}</div>}
-        
-        <TextField
-          label="Business Name"
-          variant="outlined"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          margin="normal"
-          style={{ width: '100%' }}
-        />
         
         <TextField
           label="Full Business Name"
@@ -89,24 +76,6 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
           variant="outlined"
           value={zip}
           onChange={(e) => setZip(e.target.value)}
-          margin="normal"
-          style={{ width: '100%' }}
-        />
-        
-        <TextField
-          label="Description"
-          variant="outlined"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          margin="normal"
-          style={{ width: '100%' }}
-        />
-        
-        <TextField
-          label="Product Type(s) and Name(s)"
-          variant="outlined"
-          value={productType}
-          onChange={(e) => setProductType(e.target.value)}
           margin="normal"
           style={{ width: '100%' }}
         />
