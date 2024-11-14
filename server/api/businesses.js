@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const { verifyToken } = require("../middleware/auth"); 
 
 
 const { fetchBusinesses, createBusiness, fetchBusiness, getBusinessReviews } = require("../db");
+const { isLoggedIn } = require("./utils");
 
 // Helper function for validating business ID
 const validateBusinessID = (id) => {
@@ -10,7 +12,7 @@ const validateBusinessID = (id) => {
 };
 
 // GET all businesses
-router.get("/", async (req, res, next) => {
+router.get("/", verifyToken, async (req, res, next) => {
   try {
     const businesses = await fetchBusinesses();
     res.json(businesses);
@@ -68,7 +70,7 @@ router.get("/:id/reviews", async (req, res, next) => {
 });
 
 // POST create a new business
-router.post("/", async (req, res, next) => {
+router.post("/", isLoggedIn,  async (req, res, next) => {
   try {
     const { name, address, productTypes,  } = req.body;
 
