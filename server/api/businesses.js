@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { verifyToken } = require("../middleware/auth"); 
 
-
 const { fetchBusinesses, createBusiness, fetchBusiness, getBusinessReviews } = require("../db");
 const { isLoggedIn } = require("./utils");
 
@@ -72,13 +71,13 @@ router.get("/:id/reviews", async (req, res, next) => {
 // POST create a new business
 router.post("/", isLoggedIn,  async (req, res, next) => {
   try {
-    const { name, address, productTypes,  } = req.body;
+    const { name, address, city, description, productTypes } = req.body;
 
-    // Validate the body (name, address, productType should not be empty)
-    if (!name || !address || !description|| !productTypes) {
+    // Validate the body (name, address, city, description, productTypes should not be empty)
+    if (!name || !address || !city || !description || !productTypes) {
       return next({
         name: "Request no good",
-        message: "Business name, address, description, prodcutTypes are required",
+        message: "Business name, address, city, description, productTypes are required",
       });
     }
 
@@ -90,4 +89,3 @@ router.post("/", isLoggedIn,  async (req, res, next) => {
 });
 
 module.exports = router;
-

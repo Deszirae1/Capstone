@@ -5,21 +5,22 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
   const [name, setName] = useState('');
   const [businessname_full, setBusinessnameFull] = useState('');
   const [address, setAddress] = useState('');
+  const [city, setCity] = useState(''); // Add city field
   const [description, setDescription] = useState('');
   const [productType, setProductType] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitting form with data:", { name, businessname_full, address, description, productType });
+    console.log("Submitting form with data:", { name, businessname_full, address, city, description, productType });
     
-    if (!name || !businessname_full || !address || !description || !productType) {
+    if (!name || !businessname_full || !address || !city || !description || !productType) {
       setError('All fields are required.');
       return;
     }
 
     try {
-      await businessFormAction({ name, businessname_full, address, description, productType });
+      await businessFormAction({ name, businessname_full, address, city, description, productType });
       console.log("Form submitted successfully");
       onClose();
     } catch (err) {
@@ -57,6 +58,15 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
           variant="outlined"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
+          margin="normal"
+          style={{ width: '100%' }}
+        />
+
+        <TextField
+          label="City" // Add city field
+          variant="outlined"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
           margin="normal"
           style={{ width: '100%' }}
         />
