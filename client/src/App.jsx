@@ -30,7 +30,7 @@ function App() {
 
   const attemptLoginWithToken = async () => {
     const token = window.localStorage.getItem("token");
-    console.log("Attempting login with token:", token);
+    console.log("Attempting login with token:", token); // Added log
     if (token) {
       try {
         const response = await fetch("http://localhost:3000/api/auth/me", {
@@ -41,13 +41,8 @@ function App() {
         });
         if (response.ok) {
           const json = await response.json();
-          if (json && json.data && json.data.id) {
-            setAuth(json.data);
-            console.log("Authentication successful:", json);
-          } else {
-            console.error("Authentication response does not contain user id:", json);
-            window.localStorage.removeItem("token");
-          }
+          setAuth(json);
+          console.log("Authentication successful:", json); // Added log
         } else {
           console.error("Authentication failed: ", response.statusText);
           window.localStorage.removeItem("token");
@@ -56,17 +51,11 @@ function App() {
         console.error("Error verifying token:", error);
         window.localStorage.removeItem("token");
       }
-    } else {
-      console.error("No token found");
     }
   };
 
   const fetchData = async () => {
     const token = window.localStorage.getItem("token");
-    if (!token) {
-      console.error("No token found");
-      return;
-    }
     try {
       const [usersRes, businessesRes, reviewsRes] = await Promise.all([
         fetch("http://localhost:3000/api/users"),
@@ -84,15 +73,15 @@ function App() {
   
       if (usersRes.ok) {
         setUsers(await usersRes.json());
-        console.log("Fetched users:", users);
+        console.log("Fetched users:", users); // Added log
       }
       if (businessesRes.ok) {
         setBusinesses(await businessesRes.json());
-        console.log("Fetched businesses:", businesses);
+        console.log("Fetched businesses:", businesses); // Added log
       }
       if (reviewsRes.ok) {
         setReviews(await reviewsRes.json());
-        console.log("Fetched reviews:", reviews);
+        console.log("Fetched reviews:", reviews); // Added log
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -109,10 +98,10 @@ function App() {
         },
       });
       const json = await response.json();
-      console.log("Authentication response:", json);
+      console.log("Authentication response:", json); // Added log
       if (response.ok) {
-        window.localStorage.setItem("token", json.data.token);
-        console.log("Token stored in local storage");
+        window.localStorage.setItem("token", json.token);
+        console.log("Token stored in local storage"); // Added log
         attemptLoginWithToken();
         navigate("/");
       } else {
@@ -125,24 +114,18 @@ function App() {
   };
 
   const reviewFormAction = async (formData) => {
-    const token = window.localStorage.getItem("token");
-    if (!token) {
-      console.error("No token found");
-      return;
-    }
     try {
       const response = await fetch("http://localhost:3000/api/reviews", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         setRefreshReviews((prev) => !prev);
-        console.log("Review submitted successfully");
+        console.log("Review submitted successfully"); // Added log
       } else {
         throw new Error("Failed to submit review");
       }
@@ -183,7 +166,7 @@ function App() {
   const logout = () => {
     window.localStorage.removeItem("token");
     setAuth({});
-    console.log("User logged out");
+    console.log("User logged out"); // Added log
     navigate("/login");
   };
 
@@ -192,20 +175,20 @@ function App() {
       <Header />
 
       <nav>
-  <Link to="/">Home</Link>
-  <Link to="/businesses">Businesses ({businesses.length})</Link>
-  <Link to="/users">Users ({users.length})</Link>
-  {auth && auth.id ? (
-    <>
-      <Link to="/createReview">Create Review</Link>
-      <button onClick={logout}>Logout {auth.username || "User"}</button>
-    </>
-  ) : (
-    <>
-      <Link to="/login">Login</Link>
-    </>
-  )}
-</nav>
+        <Link to="/">Home</Link>
+        <Link to="/businesses">Businesses ({businesses.length})</Link>
+        <Link to="/users">Users ({users.length})</Link>
+        {auth.id ? (
+          <>
+            <Link to="/createReview">Create Review</Link>
+            <button onClick={logout}>Logout {auth.username || "User"}</button>
+          </>
+        ) : (
+          <>
+            <Link to="/login">Login</Link>
+          </>
+        )}
+      </nav>
 
       <Routes>
         <Route path="/" element={<Home auth={auth} authAction={authAction} businesses={businesses} users={users} reviews={reviews} />} />
