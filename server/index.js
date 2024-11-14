@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require('cors');
 const app = express();
@@ -26,7 +27,7 @@ app.use(express.json());   // Parse incoming JSON requests
 // Handle preflight requests
 app.options('*', cors(corsOptions)); 
 
-// Root route
+// Root 
 app.get('/', (req, res) => {
   res.send('Welcome to the Capstone project API');
 });

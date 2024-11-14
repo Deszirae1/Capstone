@@ -1,18 +1,30 @@
-const jwt = require('jsonwebtoken');
-const { findUserWithToken } = require('../db/user');
+const { findUserWithToken } = require("../db");
 
 const isLoggedIn = async (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ status: 'error', message: 'Authorization token required' });
-  }
   try {
-    const verified = jwt.verify(token, process.env.TOKEN_SECRET);
-    req.user = verified;
+    req.user = await findUserWithToken(req.headers.authorization);
     next();
-  } catch (error) {
-    return res.status(400).json({ status: 'error', message: 'Invalid token' });
+  } catch (ex) {
+    next(ex);
   }
 };
 
-module.exports = { isLoggedIn };
+const authMiddleware = async (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+
+  if (!authHeader) {
+    return res.status(401).json({ message: "Authorization token missing" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const user = await findUserWithToken(token);
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: error.message || "Unauthorized access" });
+  }
+};
+
+module.exports = { isLoggedIn, authMiddleware };
