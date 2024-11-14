@@ -56,6 +56,11 @@ function App() {
 
   const fetchData = async () => {
     const token = window.localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
     try {
       const [usersRes, businessesRes, reviewsRes] = await Promise.all([
         fetch("http://localhost:3000/api/users"),
@@ -70,18 +75,26 @@ function App() {
           }
         }),
       ]);
-  
+
       if (usersRes.ok) {
         setUsers(await usersRes.json());
         console.log("Fetched users:", users); // Added log
+      } else {
+        console.error("Failed to fetch users:", usersRes.statusText);
       }
+
       if (businessesRes.ok) {
         setBusinesses(await businessesRes.json());
         console.log("Fetched businesses:", businesses); // Added log
+      } else {
+        console.error("Failed to fetch businesses:", businessesRes.statusText);
       }
+
       if (reviewsRes.ok) {
         setReviews(await reviewsRes.json());
         console.log("Fetched reviews:", reviews); // Added log
+      } else {
+        console.error("Failed to fetch reviews:", reviewsRes.statusText);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
