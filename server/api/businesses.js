@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { verifyToken } = require("../api/auth");
+const { isLoggedIn } = require("./utils");
 
 const { fetchBusinesses, createBusiness, fetchBusiness, getBusinessReviews } = require("../db");
-const { isLoggedIn } = require("./utils");
 
 // Helper function for validating business ID
 const validateBusinessID = (id) => {
@@ -11,7 +10,7 @@ const validateBusinessID = (id) => {
 };
 
 // GET all businesses
-router.get("/", verifyToken, async (req, res, next) => {
+router.get("/", isLoggedIn, async (req, res, next) => {
   try {
     const businesses = await fetchBusinesses();
     res.json(businesses);

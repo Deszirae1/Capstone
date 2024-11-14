@@ -55,6 +55,7 @@ function App() {
   };
 
   const fetchData = async () => {
+    const token = window.localStorage.getItem("token");
     try {
       const [usersRes, businessesRes, reviewsRes] = await Promise.all([
         fetch("http://localhost:3000/api/users"),
