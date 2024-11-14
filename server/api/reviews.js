@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const secretKey = 'your_secret_key'; // Replace with your actual secret key
+const secretKey = process.env.TOKEN_SECRET; // Use environment variable
 
 const { fetchReviews, createReview, editReview, deleteReview } = require("../db");
 
