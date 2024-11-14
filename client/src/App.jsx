@@ -30,7 +30,7 @@ function App() {
 
   const attemptLoginWithToken = async () => {
     const token = window.localStorage.getItem("token");
-    console.log("Attempting login with token:", token); // Added log
+    console.log("Attempting login with token:", token);
     if (token) {
       try {
         const response = await fetch("http://localhost:3000/api/auth/me", {
@@ -41,8 +41,8 @@ function App() {
         });
         if (response.ok) {
           const json = await response.json();
-          setAuth(json);
-          console.log("Authentication successful:", json); // Added log
+          setAuth(json.data);
+          console.log("Authentication successful:", json);
         } else {
           console.error("Authentication failed: ", response.statusText);
           window.localStorage.removeItem("token");
@@ -51,6 +51,8 @@ function App() {
         console.error("Error verifying token:", error);
         window.localStorage.removeItem("token");
       }
+    } else {
+      console.error("No token found");
     }
   };
 
@@ -77,15 +79,15 @@ function App() {
   
       if (usersRes.ok) {
         setUsers(await usersRes.json());
-        console.log("Fetched users:", users); // Added log
+        console.log("Fetched users:", users);
       }
       if (businessesRes.ok) {
         setBusinesses(await businessesRes.json());
-        console.log("Fetched businesses:", businesses); // Added log
+        console.log("Fetched businesses:", businesses);
       }
       if (reviewsRes.ok) {
         setReviews(await reviewsRes.json());
-        console.log("Fetched reviews:", reviews); // Added log
+        console.log("Fetched reviews:", reviews);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -102,10 +104,10 @@ function App() {
         },
       });
       const json = await response.json();
-      console.log("Authentication response:", json); // Added log
+      console.log("Authentication response:", json);
       if (response.ok) {
-        window.localStorage.setItem("token", json.token);
-        console.log("Token stored in local storage"); // Added log
+        window.localStorage.setItem("token", json.data.token);
+        console.log("Token stored in local storage");
         attemptLoginWithToken();
         navigate("/");
       } else {
@@ -135,7 +137,7 @@ function App() {
 
       if (response.ok) {
         setRefreshReviews((prev) => !prev);
-        console.log("Review submitted successfully"); // Added log
+        console.log("Review submitted successfully");
       } else {
         throw new Error("Failed to submit review");
       }
@@ -176,7 +178,7 @@ function App() {
   const logout = () => {
     window.localStorage.removeItem("token");
     setAuth({});
-    console.log("User logged out"); // Added log
+    console.log("User logged out");
     navigate("/login");
   };
 
