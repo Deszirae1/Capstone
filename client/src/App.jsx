@@ -6,7 +6,7 @@ import Businesses from "./pages/Businesses";
 import CreateReview from "./pages/CreateReview";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Register from "./pages/Register"; 
+import Register from "./pages/Register";
 import Account from "./pages/Account";
 import Admin from "./pages/Admin";
 import UserDetails from "./pages/UserDetails";
@@ -21,12 +21,12 @@ function App() {
   const [reviews, setReviews] = useState([]);
   const [refreshReviews, setRefreshReviews] = useState(false);
 
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
   useEffect(() => {
     attemptLoginWithToken();
     fetchData();
-    }, [refreshReviews]);
+  }, [refreshReviews]);
 
   const attemptLoginWithToken = async () => {
     const token = window.localStorage.getItem("token");
@@ -55,9 +55,9 @@ function App() {
   const fetchData = async () => {
     try {
       const [usersRes, businessesRes, reviewsRes] = await Promise.all([
-        fetch("http://localhost:3000/api/users"),  
-        fetch("http://localhost:3000/api/businesses"),  
-        fetch("http://localhost:3000/api/reviews"),  
+        fetch("http://localhost:3000/api/users"),
+        fetch("http://localhost:3000/api/businesses"),
+        fetch("http://localhost:3000/api/reviews"),
       ]);
 
       if (usersRes.ok) {
@@ -76,7 +76,7 @@ function App() {
 
   const authAction = async (credentials, mode) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/auth/${mode}`, { 
+      const response = await fetch(`http://localhost:3000/api/auth/${mode}`, {
         method: "POST",
         body: JSON.stringify(credentials),
         headers: {
@@ -106,9 +106,9 @@ function App() {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
-        setRefreshReviews(prev => !prev);  
+        setRefreshReviews((prev) => !prev);
       } else {
         throw new Error("Failed to submit review");
       }
@@ -118,15 +118,17 @@ function App() {
   };
 
   const businessFormAction = async (formData) => {
+    const token = window.localStorage.getItem("token");
     try {
       const response = await fetch("http://localhost:3000/api/businesses", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         const newBusiness = await response.json();
         setBusinesses((prev) => [...prev, newBusiness]);
@@ -141,7 +143,7 @@ function App() {
   const logout = () => {
     window.localStorage.removeItem("token");
     setAuth({});
-    navigate("/login");  
+    navigate("/login");
   };
 
   return (
@@ -159,7 +161,7 @@ function App() {
           </>
         ) : (
           <>
-              <Link to="/login">Login</Link>
+            <Link to="/login">Login</Link>
           </>
         )}
       </nav>
