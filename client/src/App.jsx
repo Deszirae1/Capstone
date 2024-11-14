@@ -41,8 +41,13 @@ function App() {
         });
         if (response.ok) {
           const json = await response.json();
-          setAuth(json.data);
-          console.log("Authentication successful:", json);
+          if (json && json.data && json.data.id) {
+            setAuth(json.data);
+            console.log("Authentication successful:", json);
+          } else {
+            console.error("Authentication response does not contain user id:", json);
+            window.localStorage.removeItem("token");
+          }
         } else {
           console.error("Authentication failed: ", response.statusText);
           window.localStorage.removeItem("token");
@@ -187,20 +192,20 @@ function App() {
       <Header />
 
       <nav>
-        <Link to="/">Home</Link>
-        <Link to="/businesses">Businesses ({businesses.length})</Link>
-        <Link to="/users">Users ({users.length})</Link>
-        {auth.id ? (
-          <>
-            <Link to="/createReview">Create Review</Link>
-            <button onClick={logout}>Logout {auth.username || "User"}</button>
-          </>
-        ) : (
-          <>
-            <Link to="/login">Login</Link>
-          </>
-        )}
-      </nav>
+  <Link to="/">Home</Link>
+  <Link to="/businesses">Businesses ({businesses.length})</Link>
+  <Link to="/users">Users ({users.length})</Link>
+  {auth && auth.id ? (
+    <>
+      <Link to="/createReview">Create Review</Link>
+      <button onClick={logout}>Logout {auth.username || "User"}</button>
+    </>
+  ) : (
+    <>
+      <Link to="/login">Login</Link>
+    </>
+  )}
+</nav>
 
       <Routes>
         <Route path="/" element={<Home auth={auth} authAction={authAction} businesses={businesses} users={users} reviews={reviews} />} />
