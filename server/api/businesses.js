@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { isLoggedIn } = require("./utils");
+const { authMiddleware } = require("./utils");
 
 const { fetchBusinesses, createBusiness, fetchBusiness, getBusinessReviews } = require("../db");
 
@@ -9,8 +9,11 @@ const validateBusinessID = (id) => {
   return !id || id.trim() === "";
 };
 
+// Apply authMiddleware to all routes in this router
+router.use(authMiddleware);
+
 // GET all businesses
-router.get("/", isLoggedIn, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const businesses = await fetchBusinesses();
     const filteredBusinesses = businesses.map(({ businessname_full, street_address, city, state, zip, price_range }) => {
@@ -72,7 +75,7 @@ router.get("/:id/reviews", async (req, res, next) => {
 });
 
 // POST create a new business
-router.post("/", isLoggedIn, async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
     const { businessname_full, street_address, city, state, zip, price_range } = req.body;
 
