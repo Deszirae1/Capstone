@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { verifyToken } = require("../middleware/auth");
+const { verifyToken } = require("../api/auth");
 
 const { fetchBusinesses, createBusiness, fetchBusiness, getBusinessReviews } = require("../db");
 const { isLoggedIn } = require("./utils");
