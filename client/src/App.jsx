@@ -56,6 +56,10 @@ function App() {
 
   const fetchData = async () => {
     const token = window.localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
     try {
       const [usersRes, businessesRes, reviewsRes] = await Promise.all([
         fetch("http://localhost:3000/api/users"),
@@ -114,11 +118,17 @@ function App() {
   };
 
   const reviewFormAction = async (formData) => {
+    const token = window.localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
     try {
       const response = await fetch("http://localhost:3000/api/reviews", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(formData),
       });
