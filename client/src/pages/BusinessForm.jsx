@@ -4,14 +4,15 @@ import { TextField, Button } from '@mui/material';
 const BusinessForm = ({ businessFormAction, onClose }) => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
+  const [description, setDescription] = useState(''); // New description state
   const [productType, setProductType] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitting form with data:", { name, address, productType }); // Debugging log
+    console.log("Submitting form with data:", { name, address, description, productType }); // Debugging log
     try {
-      await businessFormAction({ name, address, productType });
+      await businessFormAction({ name, address, description, productType }); // Include description
       console.log("Form submitted successfully"); // Debugging log
       onClose();
     } catch (err) {
@@ -55,6 +56,15 @@ const BusinessForm = ({ businessFormAction, onClose }) => {
           variant="outlined"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
+          margin="normal"
+          style={{ width: '100%' }}
+        />
+        
+        <TextField
+          label="Description"
+          variant="outlined"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           margin="normal"
           style={{ width: '100%' }}
         />
